@@ -68,6 +68,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 }
 
+class TodoItem extends StatelessWidget {
+  final Task task;
+  final ValueChanged<bool> onChanged;
+  final VoidCallback onDelete;
+
+  const TodoItem({
+    super.key,
+    required this.task,
+    required this.onChanged,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      title: Text(
+        task.title,
+        style: TextStyle(
+          decoration: task.done ? TextDecoration.lineThrough : null
+        ),
+      ),
+      value: task.done,
+      onChanged: (value) { onChanged(value ?? false); },
+      secondary: IconButton(
+        icon: const Icon(Icons.delete),
+        onPressed: onDelete,
+      ),
+    );
+  }
+}
+
 class _TodoPageState extends State<TodoPage> {
   List<Task> tasks = [
     Task(title: 'Flutterを勉強する'),
@@ -84,42 +115,41 @@ class _TodoPageState extends State<TodoPage> {
 
         body: ListView.builder(
           itemCount: tasks.length,
-          itemBuilder: (context, index) {
-            final task = tasks[index];
-
-            return CheckboxListTile(
-              title: Text(
-                task.title,
-                style: TextStyle(
-                  decoration: task.done ? TextDecoration.lineThrough : null
-                ),
-              ),
-              value: task.done,
-              onChanged: (value) {
-                setState((){ task.done = value ?? false; });
+          itemBuilder: (context, index){
+            return TodoItem(
+              task: tasks[index],
+              onChanged: (value){
+                setState((){ tasks[index].done = value; });
               },
-
-              secondary: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: (){
-                  setState(() { tasks.removeAt(index); });
-                },
-              ),
+              onDelete: (){
+                setState(() { tasks.removeAt(index); });
+              }
             );
-
-            return ListTile(
-              title: Text(task.title),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete),
-                onPressed: (){
-                  setState(() { tasks.removeAt(index); });
-                },
-              ),
-            );
-
-
-
           },
+          // itemBuilder: (context, index) {
+          //   final task = tasks[index];
+          //
+          //   return CheckboxListTile(
+          //     title: Text(
+          //       task.title,
+          //       style: TextStyle(
+          //         decoration: task.done ? TextDecoration.lineThrough : null
+          //       ),
+          //     ),
+          //     value: task.done,
+          //     onChanged: (value) {
+          //       setState((){ task.done = value ?? false; });
+          //     },
+          //
+          //     secondary: IconButton(
+          //       icon: const Icon(Icons.delete),
+          //       onPressed: (){
+          //         setState(() { tasks.removeAt(index); });
+          //       },
+          //     ),
+          //   );
+          //
+          // },
         ),
 
         floatingActionButton: FloatingActionButton(
