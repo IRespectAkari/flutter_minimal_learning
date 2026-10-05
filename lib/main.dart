@@ -102,15 +102,23 @@ class _TodoPageState extends State<TodoPage> {
             );
           },
         ),
+
         floatingActionButton: FloatingActionButton(
-          onPressed: (){
-            Navigator.push(
+          onPressed: () async {
+            final title = await Navigator.push<String>(
               context,
               MaterialPageRoute(
                 builder: (context) => const AddTaskPage(),
               ),
             );
+
+            if(title != null && title.isNotEmpty){
+              setState((){
+                tasks.add(Task(title: title));
+              });
+            }
           },
+
           child: const Icon(Icons.add),
         ),
       ),
