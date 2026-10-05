@@ -87,13 +87,22 @@ class _TodoPageState extends State<TodoPage> {
           itemBuilder: (context, index) {
             final task = tasks[index];
 
-            return CheckboxListTile(
+            return ListTile(
               title: Text(task.title),
-              value: task.done,
-              onChanged: (value) {
-                setState((){ task.done = value ?? false; });
-              },
+              trailing: IconButton(
+                icon: const Icon(Icons.delete),
+                onPressed: (){
+                  setState(() { tasks.removeAt(index); });
+                },
+              ),
             );
+            // return CheckboxListTile(
+            //   title: Text(task.title),
+            //   value: task.done,
+            //   onChanged: (value) {
+            //     setState((){ task.done = value ?? false; });
+            //   },
+            // );
           },
         ),
 
