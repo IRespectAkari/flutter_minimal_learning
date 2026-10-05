@@ -148,47 +148,7 @@ class _TodoPageState extends State<TodoPage> {
           onDelete: (index){
             setState(() { tasks.removeAt(index); });
           }
-          // onToggle: onToggle,
-          // onDelete: onDelete
         ),
-        // body: ListView.builder(
-        //   itemCount: tasks.length,
-        //   itemBuilder: (context, index){
-        //     return TodoItem(
-        //       task: tasks[index],
-        //       onChanged: (value){
-        //         setState((){ tasks[index].done = value; });
-        //       },
-        //       onDelete: (){
-        //         setState(() { tasks.removeAt(index); });
-        //       }
-        //     );
-        //   },
-        //   // itemBuilder: (context, index) {
-        //   //   final task = tasks[index];
-        //   //
-        //   //   return CheckboxListTile(
-        //   //     title: Text(
-        //   //       task.title,
-        //   //       style: TextStyle(
-        //   //         decoration: task.done ? TextDecoration.lineThrough : null
-        //   //       ),
-        //   //     ),
-        //   //     value: task.done,
-        //   //     onChanged: (value) {
-        //   //       setState((){ task.done = value ?? false; });
-        //   //     },
-        //   //
-        //   //     secondary: IconButton(
-        //   //       icon: const Icon(Icons.delete),
-        //   //       onPressed: (){
-        //   //         setState(() { tasks.removeAt(index); });
-        //   //       },
-        //   //     ),
-        //   //   );
-        //   //
-        //   // },
-        // ),
 
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.add),
