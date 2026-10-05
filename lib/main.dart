@@ -113,6 +113,10 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if(tasks.isEmpty){
+      return const Center(child: Text('タスクがありません'));
+    }
+
     return ListView.builder(
       itemCount: tasks.length,
       itemBuilder: (context, index){
