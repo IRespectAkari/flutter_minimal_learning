@@ -132,22 +132,47 @@ class _TodoPageState extends State<TodoPage> {
     Task(title: 'Todoアプリを作る'),
     Task(title: '大学の課題をやる'),
   ];
+  String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final filteredTasks = tasks.where((task){
+      return task.title.contains(searchQuery);
+    }).toList();
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar( title: const Text('My Todo') ),
 
-        body: TodoList(
-          tasks: tasks,
-          onToggle: (index){
-            setState((){ tasks[index].done = !tasks[index].done; });
-          },
-          onDelete: (index){
-            setState(() { tasks.removeAt(index); });
-          }
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: const InputDecoration(
+                  labelText: '検索',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+
+                onChanged: (value){
+                  setState(() { searchQuery = value; });
+                },
+              )
+            ),
+
+            Expanded(
+              child: TodoList(
+                tasks: filteredTasks,
+                onToggle: (index){
+                  setState((){ filteredTasks[index].done = !filteredTasks[index].done; });
+                },
+                onDelete: (index){
+                  setState(() { tasks.remove(filteredTasks[index]); });
+                }
+              )
+            )
+          ]
         ),
 
         floatingActionButton: FloatingActionButton(
