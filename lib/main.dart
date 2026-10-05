@@ -6,6 +6,8 @@ void main() {
 
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context){
     return MaterialApp(
@@ -52,15 +54,11 @@ class _AddTaskPageState extends State<AddTaskPage> {
           children: [
             TextField(
               controller: controller,
-              decoration: const InputDecoration(
-                labelText: 'タスク名',
-              ),
+              decoration: const InputDecoration( labelText: 'タスク名' ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: (){
-                Navigator.pop(context, controller.text);
-              },
+              onPressed: (){ Navigator.pop(context, controller.text); },
               child: const Text('追加する'),
             )
           ],
@@ -82,9 +80,7 @@ class _TodoPageState extends State<TodoPage> {
     // TODO: implement build
     return MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text('My Todo'),
-        ),
+        appBar: AppBar( title: const Text('My Todo') ),
 
         body: ListView.builder(
           itemCount: tasks.length,
@@ -95,32 +91,26 @@ class _TodoPageState extends State<TodoPage> {
               title: Text(task.title),
               value: task.done,
               onChanged: (value) {
-                setState((){
-                  task.done = value ?? false;
-                });
+                setState((){ task.done = value ?? false; });
               },
             );
           },
         ),
 
         floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.add),
           onPressed: () async {
             final title = await Navigator.push<String>(
               context,
-              MaterialPageRoute(
-                builder: (context) => const AddTaskPage(),
-              ),
+              MaterialPageRoute( builder: (context) => const AddTaskPage() ),
             );
 
             if(title != null && title.isNotEmpty){
-              setState((){
-                tasks.add(Task(title: title));
-              });
+              setState((){tasks.add(Task(title: title));});
             }
           },
-
-          child: const Icon(Icons.add),
         ),
+
       ),
     );
   }
