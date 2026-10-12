@@ -193,6 +193,23 @@ class _TodoPageState extends State<TodoPage> {
           },
         ),
 
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.task),
+              label: 'タブ1',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_view_week),
+              label: 'タブ2',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.brightness_5_sharp),
+              label: 'タブ3',
+            ),
+          ],
+          selectedItemColor: Colors.blue,
+        ),
       ),
     );
   }
