@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/todo_page.dart';
+import 'package:flutter_minimal_learning/main_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return MaterialApp(
-      home: TodoPage()
+      home: MainPage()
     );
   }
 }
