@@ -23,7 +23,10 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar( title: const Text('My Todo') ),
 
-      body: _pages[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
 
       backgroundColor: Colors.blueGrey,
 
