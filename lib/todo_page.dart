@@ -1,8 +1,11 @@
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/add_task_page.dart';
 import 'package:flutter_minimal_learning/task.dart';
 import 'package:flutter_minimal_learning/todo_list.dart';
+import 'package:flutter_minimal_learning/task_data.dart';
 
 class TodoPage extends StatefulWidget {
   const TodoPage({super.key});
@@ -12,11 +15,11 @@ class TodoPage extends StatefulWidget {
 }
 
 class _TodoPageState extends State<TodoPage> {
-  List<Task> tasks = [
-    Task(title: 'Flutterを勉強する'),
-    Task(title: 'Todoアプリを作る'),
-    Task(title: '大学の課題をやる'),
-  ];
+  // List<Task> tasks = [
+  //   Task(title: 'Flutterを勉強する', tags: [], startTime: new DateTime(2026)),
+  //   Task(title: 'Todoアプリを作る', tags: [], startTime: new DateTime(2026)),
+  //   Task(title: '大学の課題をやる', tags: [], startTime: new DateTime(2026)),
+  // ];
   String searchQuery = '';
 
   @override
@@ -53,7 +56,13 @@ class _TodoPageState extends State<TodoPage> {
                   child: TodoList(
                       tasks: filteredTasks,
                       onToggle: (index){
-                        setState((){ filteredTasks[index].done = !filteredTasks[index].done; });
+                        // setState((){ filteredTasks[index].done = !filteredTasks[index].done; });
+                        setState((){
+                          filteredTasks[index].update(
+                              status: filteredTasks[index].isCompleted
+                                  ? TaskStatus.todo : TaskStatus.completed
+                          );
+                        });
                       },
                       onDelete: (index){
                         setState(() { tasks.remove(filteredTasks[index]); });
@@ -72,7 +81,13 @@ class _TodoPageState extends State<TodoPage> {
             );
 
             if(title != null && title.isNotEmpty){
-              setState((){tasks.add(Task(title: title));});
+              setState((){tasks.add(Task(
+                id: 'task_${Random().nextInt(100000)}',
+                title: title,
+                tags: [],
+                startTime: new DateTime(2026),
+                endTime: new DateTime(2026),
+              ));});
             }
           },
         ),

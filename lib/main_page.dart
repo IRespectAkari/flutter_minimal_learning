@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/todo_page.dart';
 import 'package:flutter_minimal_learning/calendar_page.dart';
 import 'package:flutter_minimal_learning/week_schedule_page.dart';
+import 'package:flutter_minimal_learning/timetable_page.dart';
+import 'package:flutter_minimal_learning/timetable2_page.dart';
+import 'package:flutter_minimal_learning/task_data.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -12,11 +17,25 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   late int _selectedIndex = 0;
+  // List<Task> tasks = [
+  //   Task(title: 'Flutterを勉強する', tags: [], startTime: new DateTime(2026)),
+  //   Task(title: 'Todoアプリを作る', tags: [], startTime: new DateTime(2026)),
+  //   Task(title: '大学の課題をやる', tags: [], startTime: new DateTime(2026)),
+  //   Task(title: '情報ネットワーク入門', tags: ["course"], startTime: new DateTime(2026), weekday: 1),
+  //   Task(title: '消費者行動論', tags: ["course"], startTime: new DateTime(2026)),
+  //   Task(title: '社会学', tags: ["course"], startTime: new DateTime(2026)),
+  //   Task(title: '宗教学', tags: ["course"], startTime: new DateTime(2026)),
+  //   Task(title: 'Webデザイン', tags: ["course"], startTime: new DateTime(2026)),
+  //   Task(title: 'アプリ共同開発', tags: ["course"], startTime: new DateTime(2026)),
+  //
+  // ];
 
-  final List<Widget> _pages = const [
-    TodoPage(),
-    WeekSchedulePage(),
-    CalendarPage(),
+  late final List<Widget> _pages = [
+    const TodoPage(),
+    const WeekSchedulePage(),
+    const TimetablePage(),
+    Timetable2Page(tasks: tasks),
+    // CalendarPage(),
   ];
 
   @override
@@ -50,8 +69,12 @@ class _MainPageState extends State<MainPage> {
             label: 'タブ2',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.brightness_5_sharp),
+            icon: Icon(Icons.table_view),
             label: 'タブ3',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.brightness_5_sharp),
+            label: 'タブ4',
           ),
         ],
         selectedItemColor: Colors.blue,

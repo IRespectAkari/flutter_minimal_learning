@@ -20,10 +20,11 @@ class TodoItem extends StatelessWidget {
       title: Text(
         task.title,
         style: TextStyle(
-            decoration: task.done ? TextDecoration.lineThrough : null
+            // decoration: task.done ? TextDecoration.lineThrough : null
+            decoration: task.isCompleted ? TextDecoration.lineThrough : null
         ),
       ),
-      value: task.done,
+      value: task.isCompleted,
       onChanged: (value) { onChanged(value ?? false); },
       secondary: IconButton(
         icon: const Icon(Icons.delete),
