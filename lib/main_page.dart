@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/todo_page.dart';
 import 'package:flutter_minimal_learning/calendar_page.dart';
+import 'package:flutter_minimal_learning/week_schedule_page.dart';
 
-
-import 'package:flutter_minimal_learning/week_schedule_page.dart';class MainPage extends StatefulWidget {
+class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
   @override
@@ -23,7 +23,6 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar( title: const Text('My Todo') ),
 
       body: IndexedStack(
         index: _selectedIndex,

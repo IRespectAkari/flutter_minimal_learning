@@ -28,6 +28,7 @@ class _TodoPageState extends State<TodoPage> {
     return MaterialApp(
       home: Scaffold(
         // backgroundColor: Colors.blueGrey,
+        appBar: AppBar( title: const Text('Todo List') ),
 
         body: Column(
             children: [
