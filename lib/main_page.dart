@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/todo_page.dart';
+import 'package:flutter_minimal_learning/calendar_page.dart';
 
 
 import 'package:flutter_minimal_learning/week_schedule_page.dart';class MainPage extends StatefulWidget {
@@ -15,6 +16,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = const [
     TodoPage(),
     WeekSchedulePage(),
+    CalendarPage(),
   ];
 
   @override
