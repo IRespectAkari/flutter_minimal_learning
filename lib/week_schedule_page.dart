@@ -146,16 +146,12 @@ class WeekSchedulePage extends StatelessWidget {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            for (int dayIndex = 0;
-                            dayIndex < weekdays.length;
-                            dayIndex++)
+                            for (int dayIndex = 0; dayIndex < weekdays.length; dayIndex++)
                               Expanded(
                                 child: _DayColumn(
                                   events: events
-                                      .where(
-                                        (e) => e.dayIndex == dayIndex,
-                                  )
-                                      .toList(),
+                                    .where((e) => e.dayIndex == dayIndex)
+                                    .toList(),
                                 ),
                               ),
                           ],
