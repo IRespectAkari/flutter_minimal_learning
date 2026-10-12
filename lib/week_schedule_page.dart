@@ -182,7 +182,10 @@ class _TimeRuler extends StatelessWidget {
         children: [
           for (int hour = _startHour; hour <= _endHour; hour++)
             Positioned(
-              top: (hour - _startHour) * _hourHeight - 9,
+              // top: (hour - _startHour) * _hourHeight - 9,
+              top: hour == _startHour
+                  ? 0 : hour == _endHour
+                  ? _scheduleHeight - 14 : (hour - _startHour) * _hourHeight - 7,
               left: 0,
               right: 4,
               child: Text(
