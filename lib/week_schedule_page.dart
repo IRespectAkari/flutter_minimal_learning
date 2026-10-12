@@ -12,9 +12,12 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/task.dart';
+import 'task_data.dart';
 
 const double _hourHeight = 44;
-const double _timeRulerWidth = 48;
+// const double _timeRulerWidth = 48;
+const double _timeRulerWidth = 29;
 
 const int _startHour = 8;
 const int _endHour = 18;
@@ -33,50 +36,51 @@ class WeekSchedulePage extends StatelessWidget {
   static const weekdays = ['月', '火', '水', '木', '金'];
 
   // 仮の予定データ。後からタスク等のデータに置き換える。
-  static const events = <_ScheduleEvent>[
-    _ScheduleEvent(
-      dayIndex: 0,
-      title: 'プログラミング',
-      startMinutes: 9 * 60,
-      endMinutes: 10 * 60 + 30,
-      color: Color(0xFFC8E6C9),
-    ),
-    _ScheduleEvent(
-      dayIndex: 0,
-      title: '課題',
-      startMinutes: 13 * 60,
-      endMinutes: 14 * 60,
-      color: Color(0xFFBBDEFB),
-    ),
-    _ScheduleEvent(
-      dayIndex: 1,
-      title: '宗教学',
-      startMinutes: 10 * 60 + 30,
-      endMinutes: 12 * 60,
-      color: Color(0xFFD1C4E9),
-    ),
-    _ScheduleEvent(
-      dayIndex: 2,
-      title: '情報ネットワーク入門',
-      startMinutes: 10 * 60 + 30,
-      endMinutes: 12 * 60,
-      color: Color(0xFFBBDEFB),
-    ),
-    _ScheduleEvent(
-      dayIndex: 3,
-      title: 'アルバイト',
-      startMinutes: 14 * 60,
-      endMinutes: 17 * 60,
-      color: Color(0xFFFFE0B2),
-    ),
-    _ScheduleEvent(
-      dayIndex: 4,
-      title: 'レポート作成',
-      startMinutes: 9 * 60,
-      endMinutes: 11 * 60,
-      color: Color(0xFFFFCDD2),
-    ),
-  ];
+  static final events = convertTasks(tasks.cast<Task>());
+  // static const events = <_ScheduleEvent>[
+  //   _ScheduleEvent(
+  //     dayIndex: 0,
+  //     title: 'プログラミング',
+  //     startMinutes: 9 * 60,
+  //     endMinutes: 10 * 60 + 30,
+  //     color: Color(0xFFC8E6C9),
+  //   ),
+  //   _ScheduleEvent(
+  //     dayIndex: 0,
+  //     title: '課題',
+  //     startMinutes: 13 * 60,
+  //     endMinutes: 14 * 60,
+  //     color: Color(0xFFBBDEFB),
+  //   ),
+  //   _ScheduleEvent(
+  //     dayIndex: 1,
+  //     title: '宗教学',
+  //     startMinutes: 10 * 60 + 30,
+  //     endMinutes: 12 * 60,
+  //     color: Color(0xFFD1C4E9),
+  //   ),
+  //   _ScheduleEvent(
+  //     dayIndex: 2,
+  //     title: '情報ネットワーク入門',
+  //     startMinutes: 10 * 60 + 30,
+  //     endMinutes: 12 * 60,
+  //     color: Color(0xFFBBDEFB),
+  //   ),
+  //   _ScheduleEvent(
+  //     dayIndex: 3,
+  //     title: 'アルバイト',
+  //     startMinutes: 14 * 60,
+  //     endMinutes: 17 * 60,
+  //     color: Color(0xFFFFE0B2),
+  //   ),
+  //   _ScheduleEvent(
+  //     dayIndex: 4,
+  //     title: 'レポート作成',
+  //     startMinutes: 9 * 60,
+  //     endMinutes: 11 * 60,
+  //     color: Color(0xFFFFCDD2),
+  //   ),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -189,10 +193,11 @@ class _TimeRuler extends StatelessWidget {
               left: 0,
               right: 4,
               child: Text(
-                '$hour:00',
+                // '$hour:00',
+                '$hour時',
                 textAlign: TextAlign.right,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 10,
                   color: Colors.grey,
                 ),
               ),
@@ -302,19 +307,56 @@ class _EventCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 1),
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: event.color,
+        color: event.isCourse ? event.color : event.color,
         borderRadius: BorderRadius.circular(5),
+        border: Border.all(
+          color: event.isCourse ? const Color(0xFF64B5F6) : Colors.transparent,
+          width: event.isCourse ? 1 : 0,
+        )
       ),
       clipBehavior: Clip.hardEdge,
-      child: Text(
-        event.title,
-        style: const TextStyle(
-          fontSize: 11,
-          color: Color(0xFF30343B),
-        ),
-        overflow: TextOverflow.ellipsis,
-        maxLines: 4,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (event.isCourse)
+            Container(
+              width: 4,
+              decoration: const BoxDecoration(
+                color: Color(0xFF1976D2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(6),
+                  bottomLeft: Radius.circular(6),
+                ),
+              ),
+            ),
+
+          Expanded(child:
+            Text(
+              event.title,
+              style: TextStyle(
+                fontSize: 9,
+                color: const Color(0xFF30343B),
+                fontWeight:
+                event.isCourse ? FontWeight.bold : FontWeight.normal,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 4,
+            ),
+          )
+        ],
       ),
+
+      // child: Text(
+      //   event.title,
+      //   style: TextStyle(
+      //     fontSize: 9,
+      //     color: const Color(0xFF30343B),
+      //     fontWeight:
+      //     event.isCourse ? FontWeight.bold : FontWeight.normal,
+      //   ),
+      //   overflow: TextOverflow.ellipsis,
+      //   maxLines: 4,
+      // ),
     );
   }
 }
@@ -327,6 +369,7 @@ class _ScheduleEvent {
     required this.startMinutes,
     required this.endMinutes,
     required this.color,
+    this.isCourse = false,
   });
 
   /// 月曜 = 0、火曜 = 1、...、金曜 = 4
@@ -339,4 +382,33 @@ class _ScheduleEvent {
   final int endMinutes;
 
   final Color color;
+
+  final bool isCourse;
+}
+
+
+// 仮の色。講義ごとに色が変わる
+const _eventColors = <Color>[
+  Color(0xFFC8E6C9),
+  Color(0xFFBBDEFB),
+  Color(0xFFFFE0B2),
+  Color(0xFFE1BEE7),
+  Color(0xFFFFCDD2),
+  Color(0xFFB2DFDB),
+];
+
+List<_ScheduleEvent> convertTasks(List<Task> tasks) {
+  return [
+    for (var i = 0; i < tasks.length; i++)
+      _ScheduleEvent(
+        dayIndex: tasks[i].startTime.weekday - 1,
+        title: tasks[i].title,
+        startMinutes:
+        tasks[i].startTime.hour * 60 + tasks[i].startTime.minute,
+        endMinutes:
+        tasks[i].endTime.hour * 60 + tasks[i].endTime.minute,
+        color: _eventColors[i % _eventColors.length],
+        isCourse: tasks[i].hasTag("course"),
+      ),
+  ];
 }
