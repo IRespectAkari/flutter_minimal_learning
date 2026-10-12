@@ -13,7 +13,7 @@
 
 import 'package:flutter/material.dart';
 
-const double _hourHeight = 80;
+const double _hourHeight = 44;
 const double _timeRulerWidth = 48;
 
 const int _startHour = 8;
@@ -89,10 +89,6 @@ class WeekSchedulePage extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('週間スケジュール'),
-        centerTitle: true,
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -103,7 +99,7 @@ class WeekSchedulePage extends StatelessWidget {
                 for (int i = 0; i < weekdays.length; i++)
                   Expanded(
                     child: Container(
-                      height: 56,
+                      height: 36,
                       alignment: Alignment.center,
                       decoration: const BoxDecoration(
                         color: Color(0xFFF3F5F7),
@@ -120,6 +116,7 @@ class WeekSchedulePage extends StatelessWidget {
                             weekdays[i],
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
+                              fontSize: 10
                             ),
                           ),
                           Text(
