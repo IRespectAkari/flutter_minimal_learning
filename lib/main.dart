@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/todo_list.dart';
+import 'package:flutter_minimal_learning/task.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,23 +16,6 @@ class MyApp extends StatelessWidget {
       home: TodoPage()
     );
   }
-}
-
-class Task {
-  String title;
-  bool done;
-
-  Task({
-    required this.title,
-    this.done = false,
-  });
-}
-
-class TodoPage extends StatefulWidget {
-  const TodoPage({super.key});
-
-  @override
-  State<TodoPage> createState() => _TodoPageState();
 }
 
 class AddTaskPage extends StatefulWidget {
@@ -68,66 +53,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
   }
 }
 
-class TodoItem extends StatelessWidget {
-  final Task task;
-  final ValueChanged<bool> onChanged;
-  final VoidCallback onDelete;
 
-  const TodoItem({
-    super.key,
-    required this.task,
-    required this.onChanged,
-    required this.onDelete,
-  });
+class TodoPage extends StatefulWidget {
+  const TodoPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      title: Text(
-        task.title,
-        style: TextStyle(
-          decoration: task.done ? TextDecoration.lineThrough : null
-        ),
-      ),
-      value: task.done,
-      onChanged: (value) { onChanged(value ?? false); },
-      secondary: IconButton(
-        icon: const Icon(Icons.delete),
-        onPressed: onDelete,
-      ),
-    );
-  }
-}
-
-class TodoList extends StatelessWidget {
-  final List<Task> tasks;
-  final ValueChanged<int> onToggle;
-  final ValueChanged<int> onDelete;
-
-  const TodoList({
-    super.key,
-    required this.tasks,
-    required this.onToggle,
-    required this.onDelete,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if(tasks.isEmpty){
-      return const Center(child: Text('タスクがありません'));
-    }
-
-    return ListView.builder(
-      itemCount: tasks.length,
-      itemBuilder: (context, index){
-        return TodoItem(
-          task: tasks[index],
-          onChanged: (_) => onToggle(index),
-          onDelete: () => onDelete(index),
-        );
-      }
-    );
-  }
+  State<TodoPage> createState() => _TodoPageState();
 }
 
 class _TodoPageState extends State<TodoPage> {
