@@ -62,19 +62,19 @@ class _MainPageState extends State<MainPage> {
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.task),
-            label: 'タブ1',
+            label: 'todo_page',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_view_week),
-            label: 'タブ2',
+            label: 'week_schedule_page',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.table_view),
-            label: 'タブ3',
+            label: 'timetable_page',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.brightness_5_sharp),
-            label: 'タブ4',
+            label: 'timetable2_page',
           ),
         ],
         selectedItemColor: Colors.blue,
