@@ -24,7 +24,10 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredTasks = tasks.where((task){
+    final tasklist = tasks.where((task){
+      return !task.hasTag("course");
+    }).toList();
+    final filteredTasks = tasklist.where((task){
       return task.title.contains(searchQuery);
     }).toList();
 
