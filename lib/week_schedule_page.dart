@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task.dart';
 import 'task_data.dart';
 
-const double _hourHeight = 44;
+const double _hourHeight = 74;
 // const double _timeRulerWidth = 48;
 const double _timeRulerWidth = 29;
 
