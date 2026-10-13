@@ -334,7 +334,7 @@ class _EventCard extends StatelessWidget {
             Text(
               event.title,
               style: TextStyle(
-                fontSize: 9,
+                fontSize: 12,
                 color: const Color(0xFF30343B),
                 fontWeight:
                 event.isCourse ? FontWeight.bold : FontWeight.normal,
