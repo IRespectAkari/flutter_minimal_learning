@@ -88,8 +88,8 @@ class _TodoPageState extends State<TodoPage> {
                 id: 'task_${Random().nextInt(100000)}',
                 title: title,
                 tags: [],
-                startTime: new DateTime(2026),
-                endTime: new DateTime(2026),
+                startTime: DateTime(2026),
+                endTime: DateTime(2026),
               ));});
             }
           },

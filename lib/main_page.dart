@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/task.dart';
 import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/todo_page.dart';
-import 'package:flutter_minimal_learning/calendar_page.dart';
 import 'package:flutter_minimal_learning/week_schedule_page.dart';
-import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/timetable2_page.dart';
 import 'package:flutter_minimal_learning/task_data.dart';
 
