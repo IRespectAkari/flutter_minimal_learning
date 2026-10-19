@@ -13,7 +13,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task.dart';
-import 'task_data.dart';
+// import 'task_data.dart';
 
 const double _hourHeight = 74;
 // const double _timeRulerWidth = 48;
@@ -31,12 +31,18 @@ const double _pixelsPerMinute = _hourHeight / 60;
 
 /// 週間スケジュール画面
 class WeekSchedulePage extends StatelessWidget {
-  const WeekSchedulePage({super.key});
+  final List<Task> tasks;
+
+  const WeekSchedulePage({
+    super.key,
+    required this.tasks,
+  });
 
   static const weekdays = ['月', '火', '水', '木', '金'];
 
   // 仮の予定データ。後からタスク等のデータに置き換える。
-  static final events = convertTasks(initialTasks.cast<Task>());
+  // static final events = convertTasks(initialTasks.cast<Task>());
+
   // static const events = <_ScheduleEvent>[
   //   _ScheduleEvent(
   //     dayIndex: 0,
@@ -84,6 +90,8 @@ class WeekSchedulePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final events = convertTasks(tasks);
+
     // 今週の月曜日を求める。
     final today = DateTime.now();
     final monday = DateTime(

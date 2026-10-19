@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage> {
         onTaskUpdated: _updateTask,
         onTaskDeleted: _deleteTask,
       ),
-      const WeekSchedulePage(),
+      WeekSchedulePage(tasks: _tasks),
       const TimetablePage(),
       Timetable2Page(tasks: _tasks),
     ];
