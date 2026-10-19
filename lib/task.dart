@@ -1,20 +1,5 @@
-// class Task {
-//   String title;
-//   bool done;
-//   DateTime startTime;
-//   DateTime endTime;
-//   List<String> tags;
-//   int weekday;
-//
-//   Task({
-//     required this.title,
-//     this.done = false,
-//     required this.startTime,
-//     this.endTime = .new(2099),
-//     required this.tags,
-//     this.weekday = 0,
-//   });
-// }
+import 'dart:convert';
+
 enum TaskStatus {
   todo,
   inProgress,
@@ -105,5 +90,51 @@ class Task {
     if (recurrence != null) this.recurrence = recurrence;
 
     updatedAt = DateTime.now();
+  }
+
+  // DB(SQLite)に保存するための変換メソッド
+  Map<String, Object?> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'startTime': startTime.toIso8601String(),
+      'endTime': endTime.toIso8601String(),
+      'isAllDay': isAllDay ? 1 : 0,
+      'tags': jsonEncode(tags),
+      'details': jsonEncode(details),
+      'status': status.name,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'reminderTime': reminderTime?.toIso8601String(),
+      'recurrence': recurrence,
+    };
+  }
+
+  // DB(SQLite)から取り出すための変換メソッド
+  factory Task.fromMap(Map<String, Object?> map) {
+    return Task(
+      id: map['id'] as String,
+      title: map['title'] as String,
+      description: map['description'] as String,
+      startTime: DateTime.parse(map['startTime'] as String),
+      endTime: DateTime.parse(map['endTime'] as String),
+      isAllDay: map['isAllDay'] == 1,
+      tags: List<String>.from(
+        jsonDecode(map['tags'] as String) as List,
+      ),
+      details: Map<String, String>.from(
+        jsonDecode(map['details'] as String) as Map,
+      ),
+      status: TaskStatus.values.byName(
+        map['status'] as String,
+      ),
+      createdAt: DateTime.parse(map['createdAt'] as String),
+      updatedAt: DateTime.parse(map['updatedAt'] as String),
+      reminderTime: map['reminderTime'] == null
+          ? null
+          : DateTime.parse(map['reminderTime'] as String),
+      recurrence: map['recurrence'] as String?,
+    );
   }
 }
