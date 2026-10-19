@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/timetable_page.dart';
+
+import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/task_data.dart';
+import 'package:flutter_minimal_learning/task_database.dart';
 import 'package:flutter_minimal_learning/todo_page.dart';
 import 'package:flutter_minimal_learning/week_schedule_page.dart';
+import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/timetable2_page.dart';
-import 'package:flutter_minimal_learning/task_data.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -13,50 +16,84 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  late int _selectedIndex = 0;
-  // List<Task> tasks = [
-  //   Task(title: 'Flutterを勉強する', tags: [], startTime: new DateTime(2026)),
-  //   Task(title: 'Todoアプリを作る', tags: [], startTime: new DateTime(2026)),
-  //   Task(title: '大学の課題をやる', tags: [], startTime: new DateTime(2026)),
-  //   Task(title: '情報ネットワーク入門', tags: ["course"], startTime: new DateTime(2026), weekday: 1),
-  //   Task(title: '消費者行動論', tags: ["course"], startTime: new DateTime(2026)),
-  //   Task(title: '社会学', tags: ["course"], startTime: new DateTime(2026)),
-  //   Task(title: '宗教学', tags: ["course"], startTime: new DateTime(2026)),
-  //   Task(title: 'Webデザイン', tags: ["course"], startTime: new DateTime(2026)),
-  //   Task(title: 'アプリ共同開発', tags: ["course"], startTime: new DateTime(2026)),
-  //
-  // ];
+  int _selectedIndex = 0;
 
-  late final List<Widget> _pages = [
-    const TodoPage(),
-    const WeekSchedulePage(),
-    const TimetablePage(),
-    Timetable2Page(tasks: initialTasks),
-    // CalendarPage(),
-  ];
+  List<Task> _tasks = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTasks();
+  }
+
+  // SQLiteを初期化し、タスクを読み込む
+  Future<void> _loadTasks() async {
+    try {
+      final database = TaskDatabase.instance;
+
+      // 初回起動時だけ初期データを登録
+      await database.initializeWithInitialTasks(initialTasks);
+
+      // SQLiteから現在のタスク一覧を取得
+      final loadedTasks = await database.getTasks();
+
+      if (!mounted) return;
+
+      setState(() {
+        _tasks = loadedTasks;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
 
+    if (_error != null) {
+      return Scaffold(
+        body: Center(
+          child: Text('タスクの読み込みに失敗しました。\n$_error'),
+        ),
+      );
+    }
+
+    final pages = <Widget>[
+      const TodoPage(),
+      const WeekSchedulePage(),
+      const TimetablePage(),
+      Timetable2Page(tasks: _tasks),
+    ];
+
+    return Scaffold(
       body: IndexedStack(
         index: _selectedIndex,
-        children: _pages,
+        children: pages,
       ),
-
       backgroundColor: Colors.blueGrey,
-
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        onTap: (index){
+        onTap: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        // backgroundColor: Colors.white12,
-
-        items: const <BottomNavigationBarItem>[
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.task),
             label: 'todo_page',

@@ -6,8 +6,8 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 void main() {
   // SQLite の初期化
-  // sqfliteFfiInit();
-  // databaseFactory = databaseFactoryFfi;
+  sqfliteFfiInit();
+  databaseFactory = databaseFactoryFfi;
   // testDatabase();
 
   runApp(const MyApp());
