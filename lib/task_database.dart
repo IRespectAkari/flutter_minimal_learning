@@ -13,9 +13,7 @@ class TaskDatabase {
 
   // データベースを取得する。未作成なら初期化する。
   Future<Database> get database async {
-    if (_database != null) {
-      return _database!;
-    }
+    if (_database != null) return _database!;
 
     _database = await _initDatabase();
     return _database!;
@@ -30,7 +28,7 @@ class TaskDatabase {
 
     return openDatabase(
       dbPath,
-      version: 1,
+      version: 2,
       onCreate: (db, version) async {
         await db.execute('''
           CREATE TABLE tasks (
@@ -49,24 +47,66 @@ class TaskDatabase {
             recurrence TEXT
           )
         ''');
+
+        await _createMetaTable(db);
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await _createMetaTable(db);
+        }
       },
     );
   }
 
-  // タスクを1件保存する
-  Future<void> insertTask(Task task) async {
+  // 初期データ登録済みかどうかを記録するテーブル
+  Future<void> _createMetaTable(DatabaseExecutor db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS app_meta (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL
+      )
+    ''');
+  }
+
+  // 初期データを一度だけ登録する
+  Future<void> initializeWithInitialTasks(
+      List<Task> initialTasks,
+      ) async {
     final db = await database;
 
-    await db.insert(
-      'tasks',
-      task.toMap(),
-    );
+    await db.transaction((txn) async {
+      final result = await txn.query(
+        'app_meta',
+        columns: ['value'],
+        where: 'key = ?',
+        whereArgs: ['initial_tasks_seeded'],
+        limit: 1,
+      );
+
+      // 登録済みなら何もしない
+      if (result.isNotEmpty) return;
+
+      // 初期データをまとめて登録
+      for (final task in initialTasks) {
+        await txn.insert('tasks', task.toMap());
+      }
+
+      // 登録済みの印を付ける
+      await txn.insert('app_meta', {
+        'key': 'initial_tasks_seeded',
+        'value': 'true',
+      });
+    });
+  }
+
+  Future<void> insertTask(Task task) async {
+    final db = await database;
+    await db.insert('tasks', task.toMap());
   }
 
   // すべてのタスクを取得する
   Future<List<Task>> getTasks() async {
     final db = await database;
-
     final rows = await db.query(
       'tasks',
       orderBy: 'startTime ASC',
@@ -98,4 +138,3 @@ class TaskDatabase {
     );
   }
 }
-
