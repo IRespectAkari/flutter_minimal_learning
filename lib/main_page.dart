@@ -55,6 +55,40 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  // タスク追加
+  Future<void> _addTask(Task task) async {
+    await TaskDatabase.instance.insertTask(task);
+
+    if (!mounted) return;
+    setState(() {
+      _tasks.add(task);
+      _tasks.sort(
+            (a, b) => a.startTime.compareTo(b.startTime),
+      );
+    });
+  }
+
+  // タスク更新
+  Future<void> _updateTask(Task task) async {
+    await TaskDatabase.instance.updateTask(task);
+
+    if (!mounted) return;
+    setState(() {
+      // Taskは既存オブジェクトを更新しているため、
+      // setStateによって各画面を再描画する。
+    });
+  }
+
+  // タスク削除
+  Future<void> _deleteTask(Task task) async {
+    await TaskDatabase.instance.deleteTask(task.id);
+
+    if (!mounted) return;
+    setState(() {
+      _tasks.removeWhere((t) => t.id == task.id);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -74,7 +108,12 @@ class _MainPageState extends State<MainPage> {
     }
 
     final pages = <Widget>[
-      const TodoPage(),
+      TodoPage(
+        tasks: _tasks,
+        onTaskAdded: _addTask,
+        onTaskUpdated: _updateTask,
+        onTaskDeleted: _deleteTask,
+      ),
       const WeekSchedulePage(),
       const TimetablePage(),
       Timetable2Page(tasks: _tasks),
