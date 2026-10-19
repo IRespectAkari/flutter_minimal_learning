@@ -24,7 +24,7 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final tasklist = tasks.where((task){
+    final tasklist = initialTasks.where((task){
       return !task.hasTag("course");
     }).toList();
     final filteredTasks = tasklist.where((task){
@@ -68,7 +68,7 @@ class _TodoPageState extends State<TodoPage> {
                         });
                       },
                       onDelete: (index){
-                        setState(() { tasks.remove(filteredTasks[index]); });
+                        setState(() { initialTasks.remove(filteredTasks[index]); });
                       }
                   )
               )
@@ -84,7 +84,7 @@ class _TodoPageState extends State<TodoPage> {
             );
 
             if(title != null && title.isNotEmpty){
-              setState((){tasks.add(Task(
+              setState((){initialTasks.add(Task(
                 id: 'task_${Random().nextInt(100000)}',
                 title: title,
                 tags: [],
