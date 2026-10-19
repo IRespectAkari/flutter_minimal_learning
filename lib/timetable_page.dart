@@ -1,16 +1,30 @@
+
 import 'package:flutter/material.dart';
 
+import 'package:flutter_minimal_learning/task.dart';
+
 class TimetablePage extends StatefulWidget {
-  const TimetablePage({super.key});
+  final List<Task> tasks;
+  final Future<void> Function(Task task) onTaskAdded;
+  final Future<void> Function(Task task) onTaskUpdated;
+  final Future<void> Function(Task task) onTaskDeleted;
+
+  const TimetablePage({
+    super.key,
+    required this.tasks,
+    required this.onTaskAdded,
+    required this.onTaskUpdated,
+    required this.onTaskDeleted,
+  });
 
   @override
   State<TimetablePage> createState() => _TimetablePageState();
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  final List<String> weekdays = ['月', '火', '水', '木', '金'];
+  static const weekdays = ['月', '火', '水', '木', '金'];
 
-  final List<String> periods = [
+  static const periods = [
     '8:50\n1限',
     '10:30\n2限',
     '12:50\n3限',
@@ -18,18 +32,32 @@ class _TimetablePageState extends State<TimetablePage> {
     '16:10\n5限',
   ];
 
-  // timetable[時限][曜日]
-  final List<List<String>> timetable = [
-    ['', '', '', '', ''],
-    ['', '', '情報ネットワーク入門', '', '宗教学'],
-    ['消費者行動論', '', '', '', ''],
-    ['社会学', '', '', '', ''],
-    ['', '', '', 'Webデザイン', ''],
+  // 各時限の開始・終了時刻
+  static const periodTimes = [
+    [8, 50, 10, 20],
+    [10, 30, 12, 0],
+    [12, 50, 14, 20],
+    [14, 30, 16, 0],
+    [16, 10, 17, 40],
   ];
 
+  // 指定した曜日・時限の講義を取得する
+  List<Task> getCoursesAt(int period, int day) {
+    return widget.tasks.where((task) {
+      return task.hasTag('course') &&
+          task.startTime.weekday == day + 1 &&
+          task.details['period'] == (period + 1).toString();
+    }).toList();
+  }
+
   Future<void> editCell(int period, int day) async {
+    final courses = getCoursesAt(period, day);
+
+    // 現状は1セルにつき1講義を想定する
+    final existingTask = courses.isEmpty ? null : courses.first;
+
     final controller = TextEditingController(
-      text: timetable[period][day],
+      text: existingTask?.title ?? '',
     );
 
     final result = await showDialog<String>(
@@ -41,10 +69,11 @@ class _TimetablePageState extends State<TimetablePage> {
           autofocus: true,
           decoration: const InputDecoration(
             labelText: '講義名',
-            hintText: '講義名を入力',
+            hintText: '講義名を入力（空欄で削除）',
           ),
-          onSubmitted: (value) =>
-              Navigator.pop(context, value),
+          onSubmitted: (value) {
+            Navigator.pop(context, value);
+          },
         ),
         actions: [
           TextButton(
@@ -52,21 +81,76 @@ class _TimetablePageState extends State<TimetablePage> {
             child: const Text('キャンセル'),
           ),
           TextButton(
-            onPressed: () =>
-                Navigator.pop(context, controller.text),
+            onPressed: () {
+              Navigator.pop(context, controller.text);
+            },
             child: const Text('保存'),
           ),
         ],
       ),
     );
 
-    if (result != null) {
-      setState(() {
-        timetable[period][day] = result.trim();
-      });
+    controller.dispose();
+
+    // キャンセルなら変更しない
+    if (result == null) return;
+
+    final title = result.trim();
+
+    // 空欄なら既存の講義を削除
+    if (title.isEmpty) {
+      for (final task in courses) {
+        await widget.onTaskDeleted(task);
+      }
+      return;
     }
 
-    controller.dispose();
+    // 既存講義があれば名称を更新
+    if (existingTask != null) {
+      existingTask.title = title;
+      existingTask.updatedAt = DateTime.now();
+
+      await widget.onTaskUpdated(existingTask);
+      return;
+    }
+
+    // 空のセルなら新しい講義を作成
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
+    // 今週の指定曜日の日付を求める
+    final date = today.add(
+      Duration(days: day + 1 - now.weekday),
+    );
+
+    final time = periodTimes[period];
+
+    final task = Task(
+      id: 'course_${now.microsecondsSinceEpoch}',
+      title: title,
+      startTime: DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time[0],
+        time[1],
+      ),
+      endTime: DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time[2],
+        time[3],
+      ),
+      tags: ['course'],
+      details: {
+        'weekday': (day + 1).toString(),
+        'period': (period + 1).toString(),
+      },
+      recurrence: 'weekly',
+    );
+
+    await widget.onTaskAdded(task);
   }
 
   @override
@@ -116,9 +200,7 @@ class _TimetablePageState extends State<TimetablePage> {
                                 child: Text(
                                   periods[period],
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 9,
-                                  ),
+                                  style: const TextStyle(fontSize: 9),
                                 ),
                               ),
                             ),
@@ -128,35 +210,30 @@ class _TimetablePageState extends State<TimetablePage> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(2),
                                   child: InkWell(
-                                    onTap: () =>
-                                        editCell(period, day),
-                                    borderRadius:
-                                    BorderRadius.circular(8),
+                                    onTap: () => editCell(period, day),
+                                    borderRadius: BorderRadius.circular(8),
                                     child: Container(
                                       width: double.infinity,
                                       height: double.infinity,
                                       alignment: Alignment.center,
-                                      padding:
-                                      const EdgeInsets.all(3),
+                                      padding: const EdgeInsets.all(3),
                                       decoration: BoxDecoration(
-                                        color: timetable[period][day]
-                                            .isEmpty
+                                        color: getCoursesAt(period, day).isEmpty
                                             ? Colors.grey.shade100
                                             : Colors.lightBlue.shade100,
                                         border: Border.all(
                                           color: Colors.grey.shade400,
                                         ),
-                                        borderRadius:
-                                        BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: Text(
-                                        timetable[period][day].isEmpty
-                                            ? ''
-                                            : timetable[period][day],
+                                        getCoursesAt(period, day)
+                                            .map((task) => task.title)
+                                            .join('\n'),
                                         textAlign: TextAlign.center,
                                         style: const TextStyle(
                                           fontSize: 10,
-                                          fontWeight: FontWeight.bold
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ),
