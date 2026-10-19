@@ -31,7 +31,7 @@ class _MainPageState extends State<MainPage> {
     const TodoPage(),
     const WeekSchedulePage(),
     const TimetablePage(),
-    Timetable2Page(tasks: tasks),
+    Timetable2Page(tasks: initialTasks),
     // CalendarPage(),
   ];
 

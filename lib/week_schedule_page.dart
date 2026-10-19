@@ -36,7 +36,7 @@ class WeekSchedulePage extends StatelessWidget {
   static const weekdays = ['月', '火', '水', '木', '金'];
 
   // 仮の予定データ。後からタスク等のデータに置き換える。
-  static final events = convertTasks(tasks.cast<Task>());
+  static final events = convertTasks(initialTasks.cast<Task>());
   // static const events = <_ScheduleEvent>[
   //   _ScheduleEvent(
   //     dayIndex: 0,

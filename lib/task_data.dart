@@ -52,7 +52,7 @@ Task createCourseTask({
   );
 }
 
-final List<Task> tasks = [
+final List<Task> initialTasks = [
   createCourseTask(
     id: 'course-mon-3',
     weekday: 1,
