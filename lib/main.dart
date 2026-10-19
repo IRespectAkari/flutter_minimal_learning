@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/main_page.dart';
-import 'package:flutter_minimal_learning/task.dart';
 import 'package:flutter_minimal_learning/task_database.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
@@ -16,12 +15,13 @@ void main() {
 Future<void> testDatabase() async {
   final database = TaskDatabase.instance;
 
-  final task = Task(
-    id: 'sqlite_test_001',
-    title: 'SQLiteの動作確認',
-    startTime: DateTime(2026, 10, 20, 9, 0),
-    endTime: DateTime(2026, 10, 20, 10, 0),
-  );
+  // final task = Task(
+  //   id: 'sqlite_test_001',
+  //   title: 'SQLiteの動作確認',
+  //   startTime: DateTime(2026, 10, 20, 9, 0),
+  //   endTime: DateTime(2026, 10, 20, 10, 0),
+  // );
+
   print("-------------------");
 // 保存
 //   await database.insertTask(task);
