@@ -15,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task.dart';
 // import 'task_data.dart';
 
-const double _hourHeight = 74;
-// const double _timeRulerWidth = 48;
 const double _timeRulerWidth = 29;
 
 const int _startHour = 8;
@@ -25,9 +23,6 @@ const int _endHour = 18;
 const int _startMinutes = _startHour * 60;
 const int _endMinutes = _endHour * 60;
 const int _hours = _endHour - _startHour;
-
-const double _scheduleHeight = _hours * _hourHeight;
-const double _pixelsPerMinute = _hourHeight / 60;
 
 /// 週間スケジュール画面
 class WeekSchedulePage extends StatelessWidget {
@@ -142,36 +137,52 @@ class WeekSchedulePage extends StatelessWidget {
               ],
             ),
 
-            // 時刻目盛りと月〜金を一緒にスクロールする。
+            // 時刻目盛りと月〜金を一緒に表示する領域
             Expanded(
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  height: _scheduleHeight,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // 左側の時刻目盛り
-                      const _TimeRuler(),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // 曜日ヘッダーを除いた領域を10時間で分割する
+                  final scheduleHeight = constraints.maxHeight;
+                  final hourHeight = scheduleHeight / _hours;
+                  final pixelsPerMinute = hourHeight / 60;
 
-                      // 5曜日を1つの横並び領域にする。
-                      Expanded(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            for (int dayIndex = 0; dayIndex < weekdays.length; dayIndex++)
-                              Expanded(
-                                child: _DayColumn(
-                                  events: events
-                                    .where((e) => e.dayIndex == dayIndex)
-                                    .toList(),
-                                ),
-                              ),
-                          ],
-                        ),
+                  return SingleChildScrollView(
+                    child: SizedBox(
+                      height: scheduleHeight,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 左側の時刻目盛り
+                          _TimeRuler(
+                            hourHeight: hourHeight,
+                            scheduleHeight: scheduleHeight,
+                          ),
+
+                          // 5曜日を1つの横並び領域にする。
+                          // 月〜金の予定列
+                          Expanded(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                for (int dayIndex = 0; dayIndex < weekdays.length; dayIndex++)
+                                  Expanded(
+                                    child: _DayColumn(
+                                      events: events
+                                          .where((e) => e.dayIndex == dayIndex)
+                                          .toList(),
+                                      hourHeight: hourHeight,
+                                      scheduleHeight: scheduleHeight,
+                                      pixelsPerMinute: pixelsPerMinute,
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           ],
@@ -183,21 +194,26 @@ class WeekSchedulePage extends StatelessWidget {
 
 /// 左側の時刻目盛り
 class _TimeRuler extends StatelessWidget {
-  const _TimeRuler();
+  const _TimeRuler({
+    required this.hourHeight,
+    required this.scheduleHeight,
+  });
+
+  final double hourHeight;
+  final double scheduleHeight;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: _timeRulerWidth,
-      height: _scheduleHeight,
+      height: scheduleHeight,
       child: Stack(
         children: [
           for (int hour = _startHour; hour <= _endHour; hour++)
             Positioned(
-              // top: (hour - _startHour) * _hourHeight - 9,
               top: hour == _startHour
                   ? 0 : hour == _endHour
-                  ? _scheduleHeight - 14 : (hour - _startHour) * _hourHeight - 7,
+                  ? scheduleHeight - 14 : (hour - _startHour) * hourHeight - 7,
               left: 0,
               right: 4,
               child: Text(
@@ -218,20 +234,29 @@ class _TimeRuler extends StatelessWidget {
 
 /// 曜日ごとの予定列
 class _DayColumn extends StatelessWidget {
-  const _DayColumn({required this.events});
+  const _DayColumn({
+    required this.events,
+    required this.hourHeight,
+    required this.scheduleHeight,
+    required this.pixelsPerMinute,
+  });
 
   final List<_ScheduleEvent> events;
+  final double hourHeight;
+  final double scheduleHeight;
+  final double pixelsPerMinute;
 
+  @override
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: _scheduleHeight,
+      height: scheduleHeight,
       child: Stack(
         children: [
-          // 背景の時間罫線
           const Positioned.fill(
+          Positioned.fill(
             child: CustomPaint(
-              painter: _GridPainter(),
+              painter: _GridPainter(hourHeight: hourHeight),
             ),
           ),
 
@@ -245,8 +270,7 @@ class _DayColumn extends StatelessWidget {
                         ? _startMinutes
                         : event.startMinutes) -
                         _startMinutes
-                ) *
-                    _pixelsPerMinute,
+                ) * pixelsPerMinute,
                 height: (
                     (event.endMinutes > _endMinutes
                         ? _endMinutes
@@ -254,8 +278,7 @@ class _DayColumn extends StatelessWidget {
                         (event.startMinutes < _startMinutes
                             ? _startMinutes
                             : event.startMinutes)
-                ) *
-                    _pixelsPerMinute,
+                ) * pixelsPerMinute,
                 left: 2,
                 right: 2,
                 child: _EventCard(event: event),
@@ -268,7 +291,9 @@ class _DayColumn extends StatelessWidget {
 
 /// 時間軸の格子線
 class _GridPainter extends CustomPainter {
-  const _GridPainter();
+  const _GridPainter({required this.hourHeight});
+
+  final double hourHeight;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -278,7 +303,7 @@ class _GridPainter extends CustomPainter {
 
     // 時間ごとの横線
     for (int i = 0; i <= _hours; i++) {
-      final y = i * _hourHeight;
+      final y = i * hourHeight;
       canvas.drawLine(
         Offset(0, y),
         Offset(size.width, y),
@@ -292,6 +317,7 @@ class _GridPainter extends CustomPainter {
       Offset(0, size.height),
       paint,
     );
+
     canvas.drawLine(
       Offset(size.width, 0),
       Offset(size.width, size.height),
@@ -300,7 +326,9 @@ class _GridPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _GridPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _GridPainter oldDelegate) {
+    return oldDelegate.hourHeight != hourHeight;
+  }
 }
 
 /// 予定カード
