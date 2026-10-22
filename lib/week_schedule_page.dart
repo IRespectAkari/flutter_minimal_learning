@@ -353,9 +353,9 @@ class _EventCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (event.isCourse)
+          if (event.isCourse) ...[
             Container(
-              width: 4,
+              width: 2,
               decoration: const BoxDecoration(
                 color: Color(0xFF1976D2),
                 borderRadius: BorderRadius.only(
@@ -364,6 +364,8 @@ class _EventCard extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(width: 3), // 縦線と講義の間隔
+          ],
 
           Expanded(child:
             Text(
