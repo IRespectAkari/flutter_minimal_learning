@@ -40,11 +40,13 @@ extension AppPageInfo on AppPage {
 
 class _MainPageState extends State<MainPage> {
   AppPage _selectedPage = AppPage.todo;
-  String _selectedTerm = "2年前期";
 
   List<Task> _tasks = [];
   bool _isLoading = true;
   String? _error;
+
+  final List<String> _dropdownList = const ["1年後期", "2年前期", "2年後期"];
+  late String _selectedTerm = _dropdownList[0];
 
   @override
   void initState() {
@@ -113,22 +115,21 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  // 時間割の上部ドロップダウンメニューの自動生成関数
+  List<DropdownMenuItem<String>> createDropdownItems(List<String> values) {
+    return values.map((value) => DropdownMenuItem<String>(
+      value: value,
+      child: Text(value),
+    )).toList();
+  }
+
   Widget _buildPageHeader() {
     return switch (_selectedPage) {
       AppPage.todo || AppPage.weekSchedule => Text(_selectedPage.title),
 
       AppPage.timetable => DropdownButton<String>(
           value: _selectedTerm,
-          items: const [
-            DropdownMenuItem(
-              value: '2年前期',
-              child: Text('2年前期'),
-            ),
-            DropdownMenuItem(
-              value: '2年後期',
-              child: Text('2年後期'),
-            ),
-          ],
+          items: createDropdownItems(_dropdownList),
           onChanged: (value) {
             if (value == null) return;
             setState(() => _selectedTerm = value);
@@ -161,6 +162,7 @@ class _MainPageState extends State<MainPage> {
     };
   }
 
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -178,22 +180,6 @@ class _MainPageState extends State<MainPage> {
         ),
       );
     }
-
-    final pages = <Widget>[
-      TodoPage(
-        tasks: _tasks,
-        onTaskAdded: _addTask,
-        onTaskUpdated: _updateTask,
-        onTaskDeleted: _deleteTask,
-      ),
-      WeekSchedulePage(tasks: _tasks),
-      TimetablePage(
-        tasks: _tasks,
-        onTaskAdded: _addTask,
-        onTaskUpdated: _updateTask,
-        onTaskDeleted: _deleteTask,),
-      Timetable2Page(tasks: _tasks),
-    ];
 
     return Scaffold(
       appBar: AppBar(
