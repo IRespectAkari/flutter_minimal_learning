@@ -37,9 +37,6 @@ class _TodoPageState extends State<TodoPage> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Todo List'),
-      ),
       body: Column(
         children: [
           Padding(

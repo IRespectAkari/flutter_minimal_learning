@@ -17,7 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
-  String _selectedTerm = "前期";
+  String _selectedTerm = "2年前期";
 
   List<Task> _tasks = [];
   bool _isLoading = true;
@@ -103,12 +103,12 @@ class _MainPageState extends State<MainPage> {
           value: _selectedTerm,
           items: const [
             DropdownMenuItem(
-              value: '前期',
-              child: Text('前期'),
+              value: '2年前期',
+              child: Text('2年前期'),
             ),
             DropdownMenuItem(
-              value: '後期',
-              child: Text('後期'),
+              value: '2年後期',
+              child: Text('2年後期'),
             ),
           ],
           onChanged: (value) {
@@ -164,6 +164,7 @@ class _MainPageState extends State<MainPage> {
         actions: [
           IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
         ],
+        centerTitle: _selectedIndex == 2,
       ),
 
       body: IndexedStack(
