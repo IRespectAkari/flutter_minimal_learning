@@ -1,12 +1,21 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/main_page.dart';
 import 'package:flutter_minimal_learning/task_database.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   // SQLite の初期化
-  sqfliteFfiInit();
-  databaseFactory = databaseFactoryFfi;
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Windowsの場合
+  if(!kIsWeb && Platform.isWindows){
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  }
   // testDatabase();
 
   runApp(const MyApp());
