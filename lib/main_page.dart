@@ -17,6 +17,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _selectedIndex = 0;
+  String _selectedTerm = "前期";
 
   List<Task> _tasks = [];
   bool _isLoading = true;
@@ -89,6 +90,39 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  Widget _buildPageHeader() {
+    switch (_selectedIndex) {
+      case 0:
+        return const Text('タスク一覧');
+
+      case 1:
+        return const Text('週間スケジュール');
+
+      case 2:
+        return DropdownButton<String>(
+          value: _selectedTerm,
+          items: const [
+            DropdownMenuItem(
+              value: '前期',
+              child: Text('前期'),
+            ),
+            DropdownMenuItem(
+              value: '後期',
+              child: Text('後期'),
+            ),
+          ],
+          onChanged: (value) {
+            if (value == null) return;
+            setState(() => _selectedTerm = value);
+          },
+        );
+
+
+      default:
+        return const Text('ホーム');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -124,6 +158,14 @@ class _MainPageState extends State<MainPage> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
+        title: _buildPageHeader(),
+        actions: [
+          IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
+        ],
+      ),
+
       body: IndexedStack(
         index: _selectedIndex,
         children: pages,
