@@ -15,8 +15,29 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
+enum AppPage {
+  todo,
+  weekSchedule,
+  timetable,
+  settings,
+}
+extension AppPageInfo on AppPage {
+  String get title {
+    switch (this) {
+      case AppPage.timetable:
+        return '時間割';
+      case AppPage.weekSchedule:
+        return '週間スケジュール';
+      case AppPage.todo:
+        return 'タスク一覧';
+      case AppPage.settings:
+        return '設定';
+    }
+  }
+}
+
 class _MainPageState extends State<MainPage> {
-  int _selectedIndex = 0;
+  AppPage _selectedPage = AppPage.todo;
   String _selectedTerm = "2年前期";
 
   List<Task> _tasks = [];
@@ -91,15 +112,10 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _buildPageHeader() {
-    switch (_selectedIndex) {
-      case 0:
-        return const Text('タスク一覧');
+    return switch (_selectedPage) {
+      AppPage.todo || AppPage.weekSchedule => Text(_selectedPage.title),
 
-      case 1:
-        return const Text('週間スケジュール');
-
-      case 2:
-        return DropdownButton<String>(
+      AppPage.timetable => DropdownButton<String>(
           value: _selectedTerm,
           items: const [
             DropdownMenuItem(
@@ -115,12 +131,10 @@ class _MainPageState extends State<MainPage> {
             if (value == null) return;
             setState(() => _selectedTerm = value);
           },
-        );
+        ),
 
-
-      default:
-        return const Text('ホーム');
-    }
+      _ => Text(_selectedPage.title)
+    };
   }
 
   @override
@@ -164,19 +178,28 @@ class _MainPageState extends State<MainPage> {
         actions: [
           IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
         ],
-        centerTitle: _selectedIndex == 2,
+        centerTitle: _selectedPage == AppPage.timetable,
       ),
 
       body: IndexedStack(
-        index: _selectedIndex,
+        index: _selectedPage.index,
         children: pages,
       ),
       backgroundColor: Colors.blueGrey,
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
+        currentIndex: _selectedPage.index,
         onTap: (index) {
           setState(() {
-            _selectedIndex = index;
+            switch(index){
+              case 0:
+                _selectedPage = AppPage.todo;
+              case 1:
+                _selectedPage = AppPage.weekSchedule;
+              case 2:
+                _selectedPage = AppPage.timetable;
+              case 3:
+                _selectedPage = AppPage.settings;
+            }
           });
         },
         items: const [
