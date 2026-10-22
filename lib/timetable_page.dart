@@ -200,7 +200,7 @@ class _TimetablePageState extends State<TimetablePage> {
                                 child: Text(
                                   periods[period],
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 9),
+                                  style: const TextStyle(fontSize: 11),
                                 ),
                               ),
                             ),
