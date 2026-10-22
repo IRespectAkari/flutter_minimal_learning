@@ -253,7 +253,6 @@ class _DayColumn extends StatelessWidget {
       height: scheduleHeight,
       child: Stack(
         children: [
-          const Positioned.fill(
           Positioned.fill(
             child: CustomPaint(
               painter: _GridPainter(hourHeight: hourHeight),
