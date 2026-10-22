@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/course_edit_dialog.dart';
 
 class TimetablePage extends StatefulWidget {
   final List<Task> tasks;
@@ -62,31 +63,10 @@ class _TimetablePageState extends State<TimetablePage> {
 
     final result = await showDialog<String>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('${weekdays[day]}曜日 ${period + 1}限'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(
-            labelText: '講義名',
-            hintText: '講義名を入力（空欄で削除）',
-          ),
-          onSubmitted: (value) {
-            Navigator.pop(context, value);
-          },
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('キャンセル'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context, controller.text);
-            },
-            child: const Text('保存'),
-          ),
-        ],
+      builder: (context) => CourseEditDialog(
+        title: existingTask?.title ?? '',
+        weekday: weekdays[day],
+        period: period,
       ),
     );
 
