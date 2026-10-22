@@ -22,18 +22,20 @@ enum AppPage {
   settings,
 }
 extension AppPageInfo on AppPage {
-  String get title {
-    switch (this) {
-      case AppPage.timetable:
-        return '時間割';
-      case AppPage.weekSchedule:
-        return '週間スケジュール';
-      case AppPage.todo:
-        return 'タスク一覧';
-      case AppPage.settings:
-        return '設定';
-    }
-  }
+  String get title => switch (this) {
+    AppPage.timetable => '時間割',
+    AppPage.weekSchedule => '週間スケジュール',
+    AppPage.todo => 'タスク一覧',
+    AppPage.settings => '設定'
+  };
+
+  IconData get icon => switch (this) {
+    AppPage.timetable => Icons.grid_view,
+    // AppPage.timetable => Icons.table_view,
+    AppPage.weekSchedule => Icons.calendar_view_week,
+    AppPage.todo => Icons.checklist,
+    AppPage.settings => Icons.settings,
+  };
 }
 
 class _MainPageState extends State<MainPage> {
@@ -137,6 +139,28 @@ class _MainPageState extends State<MainPage> {
     };
   }
 
+  Widget buildPage(AppPage page) {
+    return switch (page) {
+      AppPage.todo => TodoPage(
+          tasks: _tasks,
+          onTaskAdded: _addTask,
+          onTaskUpdated: _updateTask,
+          onTaskDeleted: _deleteTask,
+        ),
+
+      AppPage.weekSchedule => WeekSchedulePage(tasks: _tasks),
+
+      AppPage.timetable => TimetablePage(
+          tasks: _tasks,
+          onTaskAdded: _addTask,
+          onTaskUpdated: _updateTask,
+          onTaskDeleted: _deleteTask,
+        ),
+
+      AppPage.settings => Timetable2Page(tasks: _tasks)
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -181,45 +205,20 @@ class _MainPageState extends State<MainPage> {
         centerTitle: _selectedPage == AppPage.timetable,
       ),
 
-      body: IndexedStack(
-        index: _selectedPage.index,
-        children: pages,
-      ),
+      body: buildPage(_selectedPage),
+
       backgroundColor: Colors.blueGrey,
+
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedPage.index,
-        onTap: (index) {
-          setState(() {
-            switch(index){
-              case 0:
-                _selectedPage = AppPage.todo;
-              case 1:
-                _selectedPage = AppPage.weekSchedule;
-              case 2:
-                _selectedPage = AppPage.timetable;
-              case 3:
-                _selectedPage = AppPage.settings;
-            }
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.task),
-            label: 'todo_page',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_view_week),
-            label: 'week_schedule_page',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.table_view),
-            label: 'timetable_page',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.brightness_5_sharp),
-            label: 'timetable2_page',
-          ),
-        ],
+        onTap: (index) => setState((){ _selectedPage = AppPage.values[index]; }),
+        items: AppPage.values.map((page) {
+          return BottomNavigationBarItem(
+            icon: Icon(page.icon),
+            label: page.title,
+          );
+        }).toList(),
+
         selectedItemColor: Colors.blue,
       ),
     );
