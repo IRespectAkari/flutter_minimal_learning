@@ -43,7 +43,7 @@ extension AppPageInfo on AppPage {
 }
 
 class _MainPageState extends State<MainPage> {
-  AppPage _selectedPage = AppPage.todo;
+  AppPage _selectedPage = AppPage.calendar;
 
   List<Task> _tasks = [];
   bool _isLoading = true;
