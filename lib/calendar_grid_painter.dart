@@ -144,8 +144,8 @@ class CalendarGridPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       )..layout();
 
-      // 15日のセル位置を基準に、週の中央付近へ配置。
-      final x = (i + 0.5) * cellWidth - textPainter.width / 2;
+      // 月グリッド全体の中央付近へ配置。
+      final x = (size.width - textPainter.width) / 2;
       final y = (cellHeight - textPainter.height) / 2;
 
       textPainter.paint(canvas, Offset(x, y));
