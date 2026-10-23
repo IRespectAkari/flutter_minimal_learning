@@ -123,9 +123,9 @@ class _MainPageState extends State<MainPage> {
     )).toList();
   }
 
-  Widget _buildPageHeader() {
-    return switch (_selectedPage) {
-      AppPage.todo || AppPage.weekSchedule => Text(_selectedPage.title),
+  Widget _buildPageHeader(AppPage selectedPage) {
+    return switch (selectedPage) {
+      AppPage.todo || AppPage.weekSchedule => Text(selectedPage.title),
 
       AppPage.timetable => DropdownButton<String>(
           value: _selectedTerm,
@@ -136,7 +136,7 @@ class _MainPageState extends State<MainPage> {
           },
         ),
 
-      _ => Text(_selectedPage.title)
+      _ => Text(selectedPage.title)
     };
   }
 
@@ -184,7 +184,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
-        title: _buildPageHeader(),
+        title: _buildPageHeader(_selectedPage),
         actions: [
           IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
         ],
