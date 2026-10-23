@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_minimal_learning/add_task_page.dart';
+import 'package:flutter_minimal_learning/seed_test_tasks.dart';
 import 'package:flutter_minimal_learning/task.dart';
 import 'package:flutter_minimal_learning/todo_list.dart';
 
@@ -82,6 +83,15 @@ class _TodoPageState extends State<TodoPage> {
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
+        // onPressed: () async {
+        //   await seedTestTasks();
+        //
+        //   if (!context.mounted) return;
+        //
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     const SnackBar(content: Text('テストデータを登録しました')),
+        //   );
+        // },
         onPressed: () async {
           // final title = await Navigator.push<String>(
           final task = await Navigator.push<Task>(
