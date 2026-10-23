@@ -26,11 +26,11 @@ class _TimetablePageState extends State<TimetablePage> {
   static const weekdays = ['月', '火', '水', '木', '金'];
 
   static const periods = [
-    '8:50\n1限',
-    '10:30\n2限',
-    '12:50\n3限',
-    '14:30\n4限',
-    '16:10\n5限',
+    '8:50\n\n1限\n\n10:20',
+    '10:30\n\n2限\n\n12:00',
+    '12:50\n\n3限\n\n14:20',
+    '14:30\n\n4限\n\n16:00',
+    '16:10\n\n5限\n\n17:40',
   ];
 
   // 各時限の開始・終了時刻
@@ -153,7 +153,7 @@ class _TimetablePageState extends State<TimetablePage> {
           child: Row(
             children: [
               SizedBox(
-                width: 25,
+                width: 35,
                 child: Center(
                   child: Text(
                     periods[period],
