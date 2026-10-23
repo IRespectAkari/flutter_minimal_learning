@@ -63,11 +63,24 @@ class _TimetablePageState extends State<TimetablePage> {
 
     final result = await showDialog<String>(
       context: context,
-      builder: (context) => CourseEditDialog(
-        title: existingTask?.title ?? '',
-        weekday: weekdays[day],
-        period: period,
-      ),
+      useSafeArea: true,
+      builder: (context) {
+        return MediaQuery.removeViewInsets(
+          context: context,
+          removeBottom: true,
+          child: Transform.translate(
+            offset: Offset(
+              0,
+              -MediaQuery.sizeOf(context).height * 0.1,
+            ),
+            child: CourseEditDialog(
+              title: existingTask?.title ?? '',
+              weekday: weekdays[day],
+              period: period,
+            ),
+          ),
+        );
+      },
     );
 
     controller.dispose();
