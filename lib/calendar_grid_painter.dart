@@ -63,24 +63,53 @@ class CalendarGridPainter extends CustomPainter {
       );
     }
 
-    // 月初・月末の境界を太くする。
+    // 月の領域の境界を描画する。
+    bool isDifferentMonth(DateTime a, DateTime b) {
+      return a.year != b.year || a.month != b.month;
+    }
+
     for (int i = 0; i < 7; i++) {
       final date = weekStart.add(Duration(days: i));
 
-      if (CalendarMonthData.isMonthStart(date)) {
-        final x = i * cellWidth;
+      final left = i * cellWidth;
+      final right = (i + 1) * cellWidth;
+
+      // 月の領域における各セルの上下左右の境界。
+      final previousDay = date.subtract(const Duration(days: 1));
+      final nextDay = date.add(const Duration(days: 1));
+      final previousWeek = date.subtract(const Duration(days: 7));
+      final nextWeek = date.add(const Duration(days: 7));
+
+      // 左側：日曜日（i == 0）には線を引かない
+      if (i > 0 && isDifferentMonth(date, previousDay)) {
         canvas.drawLine(
-          Offset(x, 0),
-          Offset(x, cellHeight),
+          Offset(left, 0),
+          Offset(left, cellHeight),
           thickPaint,
         );
       }
 
-      if (CalendarMonthData.isMonthEnd(date)) {
-        final x = (i + 1) * cellWidth;
+      // 右側：土曜日（i == 6）には線を引かない
+      if (i < 6 && isDifferentMonth(date, nextDay)) {
         canvas.drawLine(
-          Offset(x, 0),
-          Offset(x, cellHeight),
+          Offset(right, 0),
+          Offset(right, cellHeight),
+          thickPaint,
+        );
+      }
+
+      if (isDifferentMonth(date, previousWeek)) {
+        canvas.drawLine(
+          Offset(left, 0),
+          Offset(right, 0),
+          thickPaint,
+        );
+      }
+
+      if (isDifferentMonth(date, nextWeek)) {
+        canvas.drawLine(
+          Offset(left, cellHeight),
+          Offset(right, cellHeight),
           thickPaint,
         );
       }
