@@ -7,6 +7,7 @@ import 'package:flutter_minimal_learning/todo_page.dart';
 import 'package:flutter_minimal_learning/week_schedule_page.dart';
 import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/timetable2_page.dart';
+import 'package:flutter_minimal_learning/calendar_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,14 +20,16 @@ enum AppPage {
   todo,
   weekSchedule,
   timetable,
-  settings,
+  // settings,
+  calendar,
 }
 extension AppPageInfo on AppPage {
   String get title => switch (this) {
     AppPage.timetable => '時間割',
     AppPage.weekSchedule => '週間スケジュール',
     AppPage.todo => 'タスク一覧',
-    AppPage.settings => '設定'
+    // AppPage.settings => '設定',
+    AppPage.calendar => 'カレンダー',
   };
 
   IconData get icon => switch (this) {
@@ -34,7 +37,8 @@ extension AppPageInfo on AppPage {
     // AppPage.timetable => Icons.table_view,
     AppPage.weekSchedule => Icons.calendar_view_week,
     AppPage.todo => Icons.checklist,
-    AppPage.settings => Icons.settings,
+    // AppPage.settings => Icons.settings,
+    AppPage.calendar => Icons.calendar_month,
   };
 }
 
@@ -158,7 +162,8 @@ class _MainPageState extends State<MainPage> {
           onTaskDeleted: _deleteTask,
         ),
 
-      AppPage.settings => Timetable2Page(tasks: _tasks)
+      // AppPage.settings => Timetable2Page(tasks: _tasks),
+      AppPage.calendar => CalendarPage(),
     };
   }
 
