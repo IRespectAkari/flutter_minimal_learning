@@ -74,8 +74,11 @@ class _CalendarPageState extends State<CalendarPage> {
               weekStart: weekStart,
               cellHeight: _cellHeight,
               lineColor: const Color(0xFF555568),
-              monthBoundaryColor: const Color(0xFFD6A52B),
-              monthLabelColor: const Color(0xFFD6A52B),
+              monthBoundaryColor: const Color(0xFF7A7A7A),
+              monthLabelColor: const Color(0xFF7A7A7A),
+              // 下はダークモード用に残しておく
+              // monthBoundaryColor: const Color(0xFFD6A52B),
+              // monthLabelColor: const Color(0xFFD6A52B),
             ),
           ),
 
