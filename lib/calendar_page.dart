@@ -1,11 +1,17 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/task.dart';
 
 import 'calendar_grid_painter.dart';
 import 'calendar_month_data.dart';
 
 class CalendarPage extends StatefulWidget {
-  const CalendarPage({super.key});
+  final List<Task> tasks;
+
+  const CalendarPage({
+    super.key,
+    required this.tasks,
+  });
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -88,23 +94,43 @@ class _CalendarPageState extends State<CalendarPage> {
               for (int i = 0; i < 7; i++)
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 3, right: 4),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Text(
-                        '${weekStart.add(Duration(days: i)).day}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: i == 0 ? Colors.redAccent
-                               : i == 6 ? Color(0xFF313AFF)
-                               : Colors.black,
-                          // 以下はダークモード用に残しておく
-                          // color: i == 0
-                          //     ? Colors.redAccent : i == 6
-                          //     ? Colors.lightBlueAccent : Colors.white,
+                    padding: const EdgeInsets.only(top: 3, right: 3, left: 2),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        // 日付は従来どおり右上に表示
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Text(
+                            '${weekStart.add(Duration(days: i)).day}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: (i == 0 || i == 6) ? FontWeight.bold : FontWeight.w400,
+                              color: i == 0 ? Colors.redAccent
+                                   : i == 6 ? const Color(0xFF313AFF)
+                                   : Colors.black,
+                              // 以下はダークモード用に残しておく
+                              // color: i == 0
+                              //     ? Colors.redAccent : i == 6
+                              //     ? Colors.lightBlueAccent : Colors.white,
+                            ),
+                          ),
                         ),
-                      ),
+
+                        // その日の予定を表示
+                        ..._getTasksForDate(weekStart.add(Duration(days: i)))
+                          .map((task) => Text(
+                            task.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 9,
+                              height: 1.3,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -114,6 +140,20 @@ class _CalendarPageState extends State<CalendarPage> {
       ),
     );
   }
+
+  // 開始日が一致するTask（講義を除く）を表示
+  List<Task> _getTasksForDate(DateTime date) {
+    return widget.tasks.where((task) {
+      // まずは開始日が一致する予定だけを表示する。
+      return task.startTime.year == date.year &&
+          task.startTime.month == date.month &&
+          task.startTime.day == date.day;
+    })
+    .where((task) => !task.hasTag('course'))
+    .toList()
+    ..sort((a, b) => a.startTime.compareTo(b.startTime));
+  }
+
 
   @override
   Widget build(BuildContext context) {

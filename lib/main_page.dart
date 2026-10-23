@@ -163,7 +163,7 @@ class _MainPageState extends State<MainPage> {
         ),
 
       // AppPage.settings => Timetable2Page(tasks: _tasks),
-      AppPage.calendar => CalendarPage(),
+      AppPage.calendar => CalendarPage(tasks: _tasks),
     };
   }
 
