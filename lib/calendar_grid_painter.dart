@@ -45,8 +45,11 @@ class CalendarGridPainter extends CustomPainter {
         rect,
         Paint()
           ..color = date.month.isEven
-              ? const Color(0xFF292B40)
-              : const Color(0xFF472D30),
+              ? const Color(0xFFFFD7D7)
+              : const Color(0xFFE6E6FF),
+              // 以下はダークモード用に残しておく
+              // ? const Color(0xFF292B40)
+              // : const Color(0xFF472D30),
       );
     }
 

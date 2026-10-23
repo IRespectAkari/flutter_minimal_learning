@@ -91,10 +91,15 @@ class _CalendarPageState extends State<CalendarPage> {
                       child: Text(
                         '${weekStart.add(Duration(days: i)).day}',
                         style: TextStyle(
-                          fontSize: 10,
-                          color: i == 0
-                              ? Colors.redAccent : i == 6
-                              ? Colors.lightBlueAccent : Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: i == 0 ? Colors.redAccent
+                               : i == 6 ? Color(0xFF313AFF)
+                               : Colors.black,
+                          // 以下はダークモード用に残しておく
+                          // color: i == 0
+                          //     ? Colors.redAccent : i == 6
+                          //     ? Colors.lightBlueAccent : Colors.white,
                         ),
                       ),
                     ),
