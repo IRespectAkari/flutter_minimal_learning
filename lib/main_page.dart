@@ -192,6 +192,7 @@ class _MainPageState extends State<MainPage> {
       ),
 
       body: buildPage(_selectedPage),
+      resizeToAvoidBottomInset: false,
 
       backgroundColor: Colors.blueGrey,
 
