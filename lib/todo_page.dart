@@ -83,29 +83,21 @@ class _TodoPageState extends State<TodoPage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () async {
-          final title = await Navigator.push<String>(
+          // final title = await Navigator.push<String>(
+          final task = await Navigator.push<Task>(
             context,
             MaterialPageRoute(
               builder: (context) => const AddTaskPage(),
             ),
           );
 
-          if (title == null || title.trim().isEmpty) {
+          if (task == null || task.title.trim().isEmpty) {
             return;
           }
 
           final now = DateTime.now();
 
-          final task = Task(
-            id: 'task_${now.microsecondsSinceEpoch}',
-            title: title.trim(),
-            startTime: now,
-            endTime: now,
-            // startTime: DateTime(2026, 10, 20, 9, 0),
-            // endTime: DateTime(2026, 10, 20, 10, 10),
-          );
-
-          await widget.onTaskAdded(task);
+          await widget.onTaskAdded(task!);
         },
       ),
     );
