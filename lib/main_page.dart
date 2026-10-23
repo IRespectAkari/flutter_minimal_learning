@@ -17,11 +17,11 @@ class MainPage extends StatefulWidget {
 }
 
 enum AppPage {
-  todo,
+  calendar,
   weekSchedule,
   timetable,
+  todo,
   // settings,
-  calendar,
 }
 extension AppPageInfo on AppPage {
   String get title => switch (this) {
