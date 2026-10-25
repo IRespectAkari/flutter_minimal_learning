@@ -138,7 +138,47 @@ class _TimetablePageState extends State<TimetablePage> {
     await widget.onTaskAdded(task);
   }
 
-  Widget createFiveFive(){
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            children: [
+              // 曜日ヘッダー
+              _weeklyHeader(),
+
+              // 5時限 × 5曜日
+              _fiveByFive(),
+              // Expanded(
+              //   child: createFiveFive(),
+              //   style: {
+              //     alignment:
+              //   }
+              // )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded _fiveByFive() {
+    return Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: FractionallySizedBox(
+                  heightFactor: 0.7,
+                  widthFactor: 1.0,
+                  child: _createTimetable(),
+                ),
+              ),
+            );
+  }
+
+  Widget _createTimetable(){
     return Column(children: [
       for (int period = 0; period < 5; period++)
         Expanded(
@@ -168,12 +208,8 @@ class _TimetablePageState extends State<TimetablePage> {
                         alignment: Alignment.center,
                         padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
-                          color: getCoursesAt(period, day).isEmpty
-                              ? Colors.grey.shade100
-                              : Colors.lightBlue.shade100,
-                          border: Border.all(
-                            color: Colors.grey.shade400,
-                          ),
+                          color: getCoursesAt(period, day).isEmpty ? Colors.grey.shade100 : Colors.lightBlue.shade100,
+                          border: Border.all(color: Colors.grey.shade400),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
@@ -197,50 +233,24 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              // 曜日ヘッダー
-              SizedBox(
-                height: 20,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 28),
-                    for (final day in weekdays)
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            day,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-
-              // 5時限 × 5曜日
-              Expanded(
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: FractionallySizedBox(
-                    heightFactor: 0.7,
-                    widthFactor: 1.0,
-                    child: createFiveFive(),
+  SizedBox _weeklyHeader() {
+    return SizedBox(
+      height: 20,
+      child: Row(
+        children: [
+          const SizedBox(width: 28),
+          for (final day in weekdays)
+            Expanded(
+              child: Center(
+                child: Text(
+                  day,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
+            ),
+        ],
       ),
     );
   }
