@@ -201,9 +201,11 @@ class _MainPageState extends State<MainPage> {
           color: Colors.blue,
           child: ListView(
             children: <Widget>[
-              DrawerHeader(child: Text("へっだぁ")),
-              ListTile(title: Text("めにゅーで開いた時"), onTap: ()=>Navigator.pop(context),),
-              ListTile(title: Text("ぼたんで開いた時"), onTap: ()=>Navigator.pop(context),),
+              DrawerHeader(child: Text("MENU")),
+              ListTile(title: Text("カレンダー"), onTap: ()=>Navigator.pop(context),),
+              ListTile(title: Text("スケジュール"), onTap: ()=>Navigator.pop(context),),
+              ListTile(title: Text("時間割"), onTap: ()=>Navigator.pop(context),),
+              ListTile(title: Text("タスク一覧"), onTap: ()=>Navigator.pop(context),),
               UserAccountsDrawerHeader(accountName: Text("大空あかり"), accountEmail: Text("z2251503@std.kiis.ac.jp"))
             ],
           ),
