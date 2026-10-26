@@ -191,7 +191,7 @@ class _MainPageState extends State<MainPage> {
         // leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
         title: _buildPageHeader(_selectedPage),
         actions: [
-          IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
+          // IconButton(icon: Icon(Icons.settings), onPressed: () {  },)
         ],
         centerTitle: _selectedPage == AppPage.timetable,
       ),
@@ -199,6 +199,21 @@ class _MainPageState extends State<MainPage> {
         elevation: 16,
         child: Container(
           color: Colors.blue,
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(child: Text("へっだぁ")),
+              ListTile(title: Text("めにゅーで開いた時"), onTap: ()=>Navigator.pop(context),),
+              ListTile(title: Text("ぼたんで開いた時"), onTap: ()=>Navigator.pop(context),),
+              UserAccountsDrawerHeader(accountName: Text("大空あかり"), accountEmail: Text("z2251503@std.kiis.ac.jp"))
+            ],
+          ),
+        ),
+      ),
+
+      endDrawer: Drawer(
+        elevation: 16,
+        child: Container(
+          color: Colors.redAccent,
           child: ListView(
             children: <Widget>[
               DrawerHeader(child: Text("へっだぁ")),
