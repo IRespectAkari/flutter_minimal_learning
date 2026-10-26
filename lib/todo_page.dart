@@ -37,18 +37,25 @@ class _TodoPageState extends State<TodoPage> {
       return task.title.contains(searchQuery);
     }).toList();
 
+    Expanded wrapEx(child) => Expanded(child: child);
+
     return Scaffold(
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: const InputDecoration(
-                labelText: '検索',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
-              onChanged: (value) => setState(() {searchQuery = value;}),
+            child: Row(
+              children: [
+                Expanded(child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: '検索',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(),
+                  ),
+                  onChanged: (value) => setState(() {searchQuery = value;}),
+                )),
+                Icon(Icons.sort),
+              ],
             ),
           ),
 
