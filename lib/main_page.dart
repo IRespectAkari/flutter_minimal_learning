@@ -8,6 +8,7 @@ import 'package:flutter_minimal_learning/week_schedule_page.dart';
 import 'package:flutter_minimal_learning/timetable_page.dart';
 import 'package:flutter_minimal_learning/timetable2_page.dart';
 import 'package:flutter_minimal_learning/calendar_page.dart';
+import 'package:flutter_minimal_learning/option_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -191,7 +192,15 @@ class _MainPageState extends State<MainPage> {
         // leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
         title: _buildPageHeader(_selectedPage),
         actions: [
-          // IconButton(icon: Icon(Icons.settings), onPressed: () {  },)
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () async {
+              await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => OptionPage())
+              );
+            }
+          )
         ],
         centerTitle: _selectedPage == AppPage.timetable,
       ),
