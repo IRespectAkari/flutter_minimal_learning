@@ -193,7 +193,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 width: 35,
                 child: Center(
                   child: Text(
-                    "${periodTimes[period][0]}:${periodTimes[period][1]}\n\n$period限\n\n${periodTimes[period][2]}:${periodTimes[period][3]}",
+                    "${periodTimes[period][0]}:${periodTimes[period][1]}\n\n${period+1}限\n\n${periodTimes[period][2]}:${periodTimes[period][3]}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 11),
                   ),
