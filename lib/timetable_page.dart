@@ -253,17 +253,7 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
     ];
 
-    return applyLayout(
-      // list as Widget,
-      Row(children: <Widget>[const SizedBox(width: 20), list]),
-      [
-        // (child) => Row(children: [const SizedBox(width: 20), child]),
-        (child) => SizedBox(height: 20, child: child),
-      ],
-    );
-  }
-
-  SizedBox _weeklyHeader2() {
+  SizedBox _weeklyHeader() {
     return SizedBox(
       height: 20,
       child: Row(
