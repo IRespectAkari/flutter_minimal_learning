@@ -238,21 +238,6 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  Widget _weeklyHeader(){
-    final List<Widget> list = [
-      for(final day in weekdays)
-        Expanded(
-          child: Center(
-            child: Text(
-              day,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-    ];
-
   SizedBox _weeklyHeader() {
     return SizedBox(
       height: 20,
