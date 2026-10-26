@@ -48,13 +48,10 @@ class _TodoPageState extends State<TodoPage> {
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
               ),
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
+              onChanged: (value) => setState(() {searchQuery = value;}),
             ),
           ),
+
           Expanded(
             child: TodoList(
               tasks: filteredTasks,
@@ -64,9 +61,7 @@ class _TodoPageState extends State<TodoPage> {
                 final task = filteredTasks[index];
 
                 task.update(
-                  status: task.isCompleted
-                      ? TaskStatus.todo
-                      : TaskStatus.completed,
+                  status: task.isCompleted ? TaskStatus.todo : TaskStatus.completed,
                 );
 
                 await widget.onTaskUpdated(task);
