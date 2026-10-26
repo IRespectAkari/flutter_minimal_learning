@@ -188,12 +188,26 @@ class _MainPageState extends State<MainPage> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
+        // leading: IconButton(onPressed: ()=>{}, icon: const Icon(Icons.menu)),
         title: _buildPageHeader(_selectedPage),
         actions: [
           IconButton(onPressed: ()=>{}, icon: Icon(Icons.settings))
         ],
         centerTitle: _selectedPage == AppPage.timetable,
+      ),
+      drawer: Drawer(
+        elevation: 16,
+        child: Container(
+          color: Colors.blue,
+          child: ListView(
+            children: <Widget>[
+              DrawerHeader(child: Text("へっだぁ")),
+              ListTile(title: Text("めにゅーで開いた時"), onTap: ()=>Navigator.pop(context),),
+              ListTile(title: Text("ぼたんで開いた時"), onTap: ()=>Navigator.pop(context),),
+              UserAccountsDrawerHeader(accountName: Text("大空あかり"), accountEmail: Text("z2251503@std.kiis.ac.jp"))
+            ],
+          ),
+        ),
       ),
 
       body: buildPage(_selectedPage),
