@@ -165,17 +165,22 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  Expanded _fiveByFive() {
-    return Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: FractionallySizedBox(
-                  heightFactor: 0.7,
-                  widthFactor: 1.0,
-                  child: _createTimetable(),
-                ),
-              ),
-            );
+  Widget applyLayout(Widget child, List<Widget Function(Widget)> wrappers) {
+    for (final wrapper in wrappers.reversed) {
+      child = wrapper(child);
+    }
+    return child;
+  }
+
+  Widget _fiveByFive(){
+    return applyLayout(
+      _createTimetable(),
+      [
+        (child) => Expanded(child: child),
+        (child) => Align(alignment: Alignment.topCenter, child: child),
+        (child) => FractionallySizedBox(heightFactor: 0.7, widthFactor: 1, child: child),
+      ]
+    );
   }
 
   Widget _createTimetable(){
@@ -233,7 +238,32 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  SizedBox _weeklyHeader() {
+  Widget _weeklyHeader(){
+    final List<Widget> list = [
+      for(final day in weekdays)
+        Expanded(
+          child: Center(
+            child: Text(
+              day,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+    ];
+
+    return applyLayout(
+      // list as Widget,
+      Row(children: <Widget>[const SizedBox(width: 20), list]),
+      [
+        // (child) => Row(children: [const SizedBox(width: 20), child]),
+        (child) => SizedBox(height: 20, child: child),
+      ],
+    );
+  }
+
+  SizedBox _weeklyHeader2() {
     return SizedBox(
       height: 20,
       child: Row(
