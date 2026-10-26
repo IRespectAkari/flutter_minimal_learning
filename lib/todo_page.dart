@@ -54,7 +54,7 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                   onChanged: (value) => setState(() {searchQuery = value;}),
                 )),
-                Icon(Icons.sort),
+                Icon(Icons.filter_alt),
               ],
             ),
           ),
