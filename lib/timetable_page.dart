@@ -165,17 +165,22 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
-  Expanded _fiveByFive() {
-    return Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: FractionallySizedBox(
-                  heightFactor: 0.7,
-                  widthFactor: 1.0,
-                  child: _createTimetable(),
-                ),
-              ),
-            );
+  Widget applyLayout(Widget child, List<Widget Function(Widget)> wrappers) {
+    for (final wrapper in wrappers.reversed) {
+      child = wrapper(child);
+    }
+    return child;
+  }
+
+  Widget _fiveByFive(){
+    return applyLayout(
+      _createTimetable(),
+      [
+        (child) => Expanded(child: child),
+        (child) => Align(alignment: Alignment.topCenter, child: child),
+        (child) => FractionallySizedBox(heightFactor: 0.7, widthFactor: 1, child: child),
+      ]
+    );
   }
 
   Widget _createTimetable(){
@@ -188,7 +193,7 @@ class _TimetablePageState extends State<TimetablePage> {
                 width: 35,
                 child: Center(
                   child: Text(
-                    "${periodTimes[period][0]}:${periodTimes[period][1]}\n\n$period限\n\n${periodTimes[period][2]}:${periodTimes[period][3]}",
+                    "${periodTimes[period][0]}:${periodTimes[period][1]}\n\n${period+1}限\n\n${periodTimes[period][2]}:${periodTimes[period][3]}",
                     textAlign: TextAlign.center,
                     style: const TextStyle(fontSize: 11),
                   ),
