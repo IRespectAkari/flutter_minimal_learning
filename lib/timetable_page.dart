@@ -177,6 +177,10 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
+  String _minToStr(int minute){
+    return "$minute".padRight(2, "0");
+  }
+
   Widget _createTimetable(){
     return Column(children: [
       for (int period = 0; period < 5; period++)
@@ -184,14 +188,13 @@ class _TimetablePageState extends State<TimetablePage> {
           child: Row(
             children: [
               applyLayout(
-                Text(
-                  "${periodTimes[period][0]}:${periodTimes[period][1]}"
-                  "\n\n"
-                  "${period+1}限"
-                  "\n\n"
-                  "${periodTimes[period][2]}:${periodTimes[period][3]}",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 11),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("${periodTimes[period][0]}:${_minToStr(periodTimes[period][1])}"),
+                    Text("${period+1}限"),
+                    Text("${periodTimes[period][2]}:${_minToStr(periodTimes[period][3])}"),
+                  ]
                 ),
                 [
                   (child) => Center(child: child),
