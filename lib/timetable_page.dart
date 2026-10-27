@@ -143,19 +143,18 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              // 曜日ヘッダー
-              _weeklyHeader(),
 
-              // 5時限 × 5曜日
-              _fiveByFive(),
-            ],
-          ),
+      body: applyLayout(
+        Column(
+          children: [
+            _weeklyHeader(), // 曜日ヘッダー
+            _fiveByFive(), // 5時限 × 5曜日
+          ],
         ),
+        [
+          (child) => Padding(padding: const EdgeInsets.all(8), child: child),
+          (child) => SafeArea(child: child),
+        ]
       ),
     );
   }
