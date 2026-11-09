@@ -29,58 +29,21 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   Widget build(BuildContext context) {
-    final taskList = widget.tasks.where((task) {
-      return !task.hasTag('course');
-    }).toList();
+    final taskList = widget.tasks
+        .where((task) => !task.hasTag('course'))
+        .toList();
 
-    final filteredTasks = taskList.where((task) {
-      return task.title.contains(searchQuery);
-    }).toList();
+    final filteredTasks = taskList
+        .where((task) => task.title.contains(searchQuery))
+        .toList();
 
     Expanded wrapEx(child) => Expanded(child: child);
 
     return Scaffold(
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(child: TextField(
-                  decoration: const InputDecoration(
-                    labelText: '検索',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) => setState(() {searchQuery = value;}),
-                )),
-                Icon(Icons.sort),
-              ],
-            ),
-          ),
-
-          Expanded(
-            child: TodoList(
-              tasks: filteredTasks,
-
-              // 完了状態の変更
-              onToggle: (index) async {
-                final task = filteredTasks[index];
-
-                task.update(
-                  status: task.isCompleted ? TaskStatus.todo : TaskStatus.completed,
-                );
-
-                await widget.onTaskUpdated(task);
-              },
-
-              // 削除
-              onDelete: (index) async {
-                final task = filteredTasks[index];
-                await widget.onTaskDeleted(task);
-              },
-            ),
-          ),
+          _searchBar(),
+          _todoListExpand(filteredTasks),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -98,9 +61,7 @@ class _TodoPageState extends State<TodoPage> {
           // final title = await Navigator.push<String>(
           final task = await Navigator.push<Task>(
             context,
-            MaterialPageRoute(
-              builder: (context) => const AddTaskPage(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddTaskPage()),
           );
 
           if (task == null || task.title.trim().isEmpty) {
@@ -109,9 +70,53 @@ class _TodoPageState extends State<TodoPage> {
 
           final now = DateTime.now();
 
-          await widget.onTaskAdded(task!);
+          await widget.onTaskAdded(task);
         },
       ),
     );
+  }
+
+  Expanded _todoListExpand(List<Task> filteredTasks) {
+    return Expanded(
+          child: TodoList(
+            tasks: filteredTasks,
+
+            // 完了状態の変更
+            onToggle: (index) async {
+              final task = filteredTasks[index];
+
+              task.update(
+                status: task.isCompleted ? TaskStatus.todo : TaskStatus.completed,
+              );
+
+              await widget.onTaskUpdated(task);
+            },
+
+            // 削除
+            onDelete: (index) async {
+              final task = filteredTasks[index];
+              await widget.onTaskDeleted(task);
+            },
+          ),
+        );
+  }
+
+  Padding _searchBar() {
+    return Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(child: TextField(
+                decoration: const InputDecoration(
+                  labelText: '検索',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) => setState(() {searchQuery = value;}),
+              )),
+              Icon(Icons.filter_alt),
+            ],
+          ),
+        );
   }
 }

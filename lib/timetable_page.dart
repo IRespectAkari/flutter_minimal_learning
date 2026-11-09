@@ -36,11 +36,12 @@ class _TimetablePageState extends State<TimetablePage> {
 
   // 指定した曜日・時限の講義を取得する
   List<Task> getCoursesAt(int period, int day) {
-    return widget.tasks.where((task) {
-      return task.hasTag('course') &&
-          task.startTime.weekday == day + 1 &&
-          task.details['period'] == (period + 1).toString();
-    }).toList();
+    return widget.tasks
+        .where((task) =>
+          task.hasTag('course')
+          && task.startTime.weekday == day + 1
+          && task.details['period'] == (period + 1).toString()
+        ).toList();
   }
 
   Future<void> editCell(int period, int day) async {
@@ -142,25 +143,18 @@ class _TimetablePageState extends State<TimetablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: [
-              // 曜日ヘッダー
-              _weeklyHeader(),
 
-              // 5時限 × 5曜日
-              _fiveByFive(),
-              // Expanded(
-              //   child: createFiveFive(),
-              //   style: {
-              //     alignment:
-              //   }
-              // )
-            ],
-          ),
+      body: applyLayout(
+        Column(
+          children: [
+            _weeklyHeader(), // 曜日ヘッダー
+            _fiveByFive(), // 5時限 × 5曜日
+          ],
         ),
+        [
+          (child) => Padding(padding: const EdgeInsets.all(8), child: child),
+          (child) => SafeArea(child: child),
+        ]
       ),
     );
   }
@@ -183,21 +177,29 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
+  String _minToStr(int minute){
+    return "$minute".padRight(2, "0");
+  }
+
   Widget _createTimetable(){
     return Column(children: [
       for (int period = 0; period < 5; period++)
         Expanded(
           child: Row(
             children: [
-              SizedBox(
-                width: 35,
-                child: Center(
-                  child: Text(
-                    "${periodTimes[period][0]}:${periodTimes[period][1]}\n\n${period+1}限\n\n${periodTimes[period][2]}:${periodTimes[period][3]}",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 11),
-                  ),
+              applyLayout(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("${periodTimes[period][0]}:${_minToStr(periodTimes[period][1])}"),
+                    Text("${period+1}限"),
+                    Text("${periodTimes[period][2]}:${_minToStr(periodTimes[period][3])}"),
+                  ]
                 ),
+                [
+                  (child) => Center(child: child),
+                  (child) => SizedBox(width: 35, child: child),
+                ]
               ),
 
               for (int day = 0; day < 5; day++)
@@ -207,27 +209,7 @@ class _TimetablePageState extends State<TimetablePage> {
                     child: InkWell(
                       onTap: () => editCell(period, day),
                       borderRadius: BorderRadius.circular(8),
-                      child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(3),
-                        decoration: BoxDecoration(
-                          color: getCoursesAt(period, day).isEmpty ? Colors.grey.shade100 : Colors.lightBlue.shade100,
-                          border: Border.all(color: Colors.grey.shade400),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          getCoursesAt(period, day)
-                              .map((task) => task.title)
-                              .join('\n'),
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
+                      child: _createCell(period, day),
                     ),
                   ),
                 ),
@@ -238,21 +220,41 @@ class _TimetablePageState extends State<TimetablePage> {
     );
   }
 
+  Container _createCell(int period, int day) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      alignment: Alignment.center,
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        color: getCoursesAt(period, day).isEmpty ? Colors.grey.shade100 : Colors.lightBlue.shade100,
+        border: Border.all(color: Colors.grey.shade400),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        getCoursesAt(period, day)
+            .map((task) => task.title)
+            .join('\n'),
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
   SizedBox _weeklyHeader() {
     return SizedBox(
       height: 20,
       child: Row(
         children: [
           const SizedBox(width: 28),
+
           for (final day in weekdays)
             Expanded(
               child: Center(
-                child: Text(
-                  day,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                child: Text(day, style: const TextStyle(fontWeight: FontWeight.bold)),
               ),
             ),
         ],
