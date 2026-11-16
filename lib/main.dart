@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/main_page.dart';
 import 'package:flutter_minimal_learning/task/task_database.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import 'package:flutter/material.dart';
 
 void main() {
   // SQLite の初期化
