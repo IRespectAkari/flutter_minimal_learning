@@ -348,6 +348,15 @@ class _TimetablePageState extends State<TimetablePage> {
 
       child: Row(children: [
         Text("${period + 1}限"),
+
+        const VerticalDivider(
+          color: Colors.grey, // 線の色
+          thickness: 1,       // 線の太さ
+          width: 20,          // 線を含めた左右の余白幅
+          indent: 4,          // 上側の余白
+          endIndent: 4,       // 下側の余白
+        ),
+
         Expanded(child: Text(course?.title ?? "空きコマ"))
       ],),
     );
