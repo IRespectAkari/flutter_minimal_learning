@@ -8,6 +8,7 @@ class RadialActionButton extends StatefulWidget {
     super.key,
     required this.actions,
     this.onTap,
+    this.openMenuOnTap = false,
     this.tooltip = 'クイックアクション',
     this.actionButtonSize = 64,
     this.selectionRadius = 42,
@@ -18,6 +19,9 @@ class RadialActionButton extends StatefulWidget {
 
   // 通常タップ時の処理
   final RadialActionCallback? onTap;
+
+  // タップでラジアルメニューが開くか
+  final bool openMenuOnTap;
 
   final String tooltip;
 
@@ -58,7 +62,11 @@ class _RadialActionButtonState extends State<RadialActionButton> {
         // tooltip: widget.tooltip,
         // 通常のタップ時のコールバック
         onPressed: () {
-          widget.onTap?.call(context);
+          if(widget.openMenuOnTap){
+            _showMenu();
+          }else {
+            widget.onTap?.call(context);
+          }
         },
         child: const Icon(Icons.add),
       ),
@@ -227,29 +235,24 @@ class _RadialActionButtonState extends State<RadialActionButton> {
 
   Widget _buildOverlay(BuildContext overlayContext) {
     return Positioned.fill(
-      child: IgnorePointer(
-        child: Material(
-          type: MaterialType.transparency,
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              for (var i = 0; i < widget.actions.length; i++)
-                Positioned(
-                  left: _actionCenters[i].dx - widget.actionButtonSize / 2,
-                  top:  _actionCenters[i].dy - widget.actionButtonSize / 2,
-                  child: _buildActionItem(overlayContext, i),
-                ),
-            ],
-          ),
+      child: Material(
+        type: MaterialType.transparency,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            for (var i = 0; i < widget.actions.length; i++)
+              Positioned(
+                left: _actionCenters[i].dx - widget.actionButtonSize / 2,
+                top:  _actionCenters[i].dy - widget.actionButtonSize / 2,
+                child: _buildActionItem(overlayContext, i),
+              ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildActionItem(
-    BuildContext context,
-    int index,
-  ) {
+  Widget _buildActionItem(BuildContext context, int index) {
     final action = widget.actions[index];
     final isSelected = index == _selectedIndex;
 
@@ -258,42 +261,49 @@ class _RadialActionButtonState extends State<RadialActionButton> {
     final backgroundColor = isSelected ? colorScheme.primary : colorScheme.surface;
     final foregroundColor = isSelected ? colorScheme.onPrimary : colorScheme.onSurface;
 
-    return AnimatedScale(
-      scale: isSelected ? 1.12 : 1.0,
-      duration: const Duration(milliseconds: 120),
-      child: Material(
-        color: backgroundColor,
-        elevation: isSelected ? 10 : 6,
-        shape: const CircleBorder(),
-        clipBehavior: Clip.antiAlias,
-        child: SizedBox(
-          width: widget.actionButtonSize,
-          height: widget.actionButtonSize,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                action.icon,
-                color: foregroundColor,
-                size: 21,
-              ),
+    return GestureDetector(
+      onTap: () {
+        _closeMenu();
+        action.onSelected(context);
+      },
 
-              const SizedBox(height: 2),
+      child: AnimatedScale(
+        scale: isSelected ? 1.12 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        child: Material(
+          color: backgroundColor,
+          elevation: isSelected ? 10 : 6,
+          shape: const CircleBorder(),
+          clipBehavior: Clip.antiAlias,
+          child: SizedBox(
+            width: widget.actionButtonSize,
+            height: widget.actionButtonSize,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  action.icon,
+                  color: foregroundColor,
+                  size: 21,
+                ),
 
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 3),
-                child: Text(
-                  action.label,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: foregroundColor,
-                    fontSize: 10,
-                    height: 1,
+                const SizedBox(height: 2),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 3),
+                  child: Text(
+                    action.label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: foregroundColor,
+                      fontSize: 10,
+                      height: 1,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
