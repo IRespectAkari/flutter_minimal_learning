@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
 
 class AddTaskPage extends StatefulWidget {
-  const AddTaskPage({super.key});
+  const AddTaskPage({
+    super.key,
+    this.initialIsAllDay = false,
+    this.initialTags = const [],
+  });
+
+  final bool initialIsAllDay;
+  final List<String> initialTags;
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -12,7 +19,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
   final controller = TextEditingController();
   late DateTime _startTime;
   late DateTime _endTime;
-  bool _isAllDay = false;
+  late bool _isAllDay;
+  late List<String> _tags;
 
   @override
   void initState() {
@@ -27,6 +35,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
       now.minute,
     );
     _endTime = _startTime.add(const Duration(hours: 1));
+    _isAllDay = widget.initialIsAllDay;
+    _tags = widget.initialTags;
   }
 
   Future<DateTime?> _pickDateTime(DateTime initial) async {
