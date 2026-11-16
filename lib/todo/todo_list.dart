@@ -21,14 +21,15 @@ class TodoList extends StatelessWidget {
     }
 
     return ListView.builder(
-        itemCount: tasks.length,
-        itemBuilder: (context, index){
-          return TodoItem(
-            task: tasks[index],
-            onChanged: (_) => onToggle(index),
-            onDelete: () => onDelete(index),
-          );
-        }
+      itemCount: tasks.length,
+
+      itemBuilder: (context, index){
+        return TodoItem(
+          task: tasks[index],
+          onChanged: (_) => onToggle(index),
+          onDelete: () => onDelete(index),
+        );
+      }
     );
   }
 }
