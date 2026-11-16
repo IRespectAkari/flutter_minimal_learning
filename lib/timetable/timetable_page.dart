@@ -4,6 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
 import 'package:flutter_minimal_learning/timetable/course_edit_dialog.dart';
 
+enum ScheduleView {
+  day,
+  week,
+}
+
 class TimetablePage extends StatefulWidget {
   final List<Task> tasks;
   final Future<void> Function(Task task) onTaskAdded;
@@ -24,6 +29,8 @@ class TimetablePage extends StatefulWidget {
 
 class _TimetablePageState extends State<TimetablePage> {
   static const weekdays = ['月', '火', '水', '木', '金'];
+  ScheduleView _viewMode = ScheduleView.week;
+  int _selectedDay = 0;
 
   // 各時限の開始・終了時刻
   static const periodTimes = [
@@ -42,6 +49,15 @@ class _TimetablePageState extends State<TimetablePage> {
           && task.startTime.weekday == day + 1
           && task.details['period'] == (period + 1).toString()
         ).toList();
+  }
+
+  // 指定した曜日の講義を取得する
+  List<Task> getDayCoursesAt(int day) {
+    return widget.tasks
+      .where((task) =>
+        task.hasTag('course')
+        && task.startTime.weekday == day + 1
+      ).toList();
   }
 
   Future<void> editCell(int period, int day) async {
@@ -145,14 +161,18 @@ class _TimetablePageState extends State<TimetablePage> {
       resizeToAvoidBottomInset: false,
 
       body: applyLayout(
-        Column(
-          children: [
-            _weeklyHeader(), // 曜日ヘッダー
-            _fiveByFive(), // 5時限 × 5曜日
-          ],
-        ),
+        Column(children: [
+          wrapSizedBox(_scheduleHeader()),
+
+          if(_viewMode == ScheduleView.day) wrapSizedBox(_viewModeSelector()),
+
+          Expanded(
+            child: (_viewMode == ScheduleView.week)
+              ? _weeklyView() : _dailyView(_selectedDay),
+          ),
+        ],),
         [
-          (child) => Padding(padding: const EdgeInsets.all(8), child: child),
+          (child) => Padding(padding: const EdgeInsets.all(12), child: child),
           (child) => SafeArea(child: child),
         ]
       ),
@@ -166,6 +186,17 @@ class _TimetablePageState extends State<TimetablePage> {
     return child;
   }
 
+  Widget wrapSizedBox(Widget child) {
+    return SizedBox(
+      width: double.infinity,
+      child: child,
+    );
+  }
+
+  String _minToStr(int minute){
+    return "$minute".padRight(2, "0");
+  }
+
   Widget _fiveByFive(){
     return applyLayout(
       _createTimetable(),
@@ -175,10 +206,6 @@ class _TimetablePageState extends State<TimetablePage> {
         (child) => FractionallySizedBox(heightFactor: 0.7, widthFactor: 1, child: child),
       ]
     );
-  }
-
-  String _minToStr(int minute){
-    return "$minute".padRight(2, "0");
   }
 
   Widget _createTimetable(){
@@ -261,4 +288,69 @@ class _TimetablePageState extends State<TimetablePage> {
       ),
     );
   }
+
+
+  Widget _weeklyView() {
+    return Column(children: [
+      _weeklyHeader(),
+      _fiveByFive(),
+    ],);
+  }
+
+  Widget _scheduleHeader() {
+    return SegmentedButton<ScheduleView>(
+      segments: const [
+        ButtonSegment(value: ScheduleView.day, label: Text('1日'),),
+        ButtonSegment(value: ScheduleView.week, label: Text('1週間'),),
+      ],
+      selected: {_viewMode},
+      onSelectionChanged: (selected) {
+        setState(() {
+          _viewMode = selected.first;
+        });
+      },
+    );
+  }
+
+  Widget _viewModeSelector() {
+
+    return SegmentedButton<int>(
+      segments: const [
+        ButtonSegment(value: 0, label: Text('月')),
+        ButtonSegment(value: 1, label: Text('火')),
+        ButtonSegment(value: 2, label: Text('水')),
+        ButtonSegment(value: 3, label: Text('木')),
+        ButtonSegment(value: 4, label: Text('金')),
+      ],
+
+      selected: {_selectedDay},
+      onSelectionChanged: (selected) {
+        setState(() {
+          _selectedDay = selected.first;
+        });
+      },
+    );
+  }
+
+  Widget _dailyView(int day) {
+    return Column(children: [
+      for (int period = 0; period < 5; period++)
+        Expanded(child: _dailyPeriodRow(period, day))
+    ],);
+  }
+
+  Widget _dailyPeriodRow(int period, int day) {
+    final courses = getCoursesAt(period, day);
+    final course = courses.isEmpty ? null : courses.first;
+
+    return InkWell(
+      onTap: () => editCell(period, day),
+
+      child: Row(children: [
+        Text("${period + 1}限"),
+        Expanded(child: Text(course?.title ?? "空きコマ"))
+      ],),
+    );
+  }
 }
+
