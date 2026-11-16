@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({super.key});

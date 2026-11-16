@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 import 'package:flutter_minimal_learning/course_edit_dialog.dart';
 
 class TimetablePage extends StatefulWidget {

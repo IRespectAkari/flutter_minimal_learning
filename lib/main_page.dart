@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_minimal_learning/task.dart';
-import 'package:flutter_minimal_learning/task_data.dart';
-import 'package:flutter_minimal_learning/task_database.dart';
-import 'package:flutter_minimal_learning/todo_page.dart';
-import 'package:flutter_minimal_learning/week_schedule_page.dart';
-import 'package:flutter_minimal_learning/timetable_page.dart';
-import 'package:flutter_minimal_learning/timetable2_page.dart';
-import 'package:flutter_minimal_learning/calendar_page.dart';
-import 'package:flutter_minimal_learning/option_page.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
+import 'package:flutter_minimal_learning/task/task_data.dart';
+import 'package:flutter_minimal_learning/task/task_database.dart';
+
+import 'package:flutter_minimal_learning/todo/todo_page.dart';
+
+import 'package:flutter_minimal_learning/weekSchedule/week_schedule_page.dart';
+import 'package:flutter_minimal_learning/timetable/timetable_page.dart';
+import 'package:flutter_minimal_learning/timetable/timetable2_page.dart';
+import 'package:flutter_minimal_learning/calendar/calendar_page.dart';
+import 'package:flutter_minimal_learning/option/option_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});

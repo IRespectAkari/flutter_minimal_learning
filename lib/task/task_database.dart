@@ -1,7 +1,7 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
 class TaskDatabase {
   // データベースを管理するインスタンス

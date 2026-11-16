@@ -1,10 +1,10 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_minimal_learning/add_task_page.dart';
-import 'package:flutter_minimal_learning/seed_test_tasks.dart';
-import 'package:flutter_minimal_learning/task.dart';
-import 'package:flutter_minimal_learning/todo_list.dart';
+import 'package:flutter_minimal_learning/todo/add_task_page.dart';
+import 'package:flutter_minimal_learning/task/seed_test_tasks.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
+import 'package:flutter_minimal_learning/todo/todo_list.dart';
 
 class TodoPage extends StatefulWidget {
   final List<Task> tasks;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/task.dart';
-import 'package:flutter_minimal_learning/todo_item.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
+import 'package:flutter_minimal_learning/todo/todo_item.dart';
 
 class TodoList extends StatelessWidget {
   final List<Task> tasks;

@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
 class Timetable2Page extends StatefulWidget {
   // 親から共有されているTask一覧を受け取る

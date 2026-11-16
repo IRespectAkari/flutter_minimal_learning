@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
-import 'calendar_grid_painter.dart';
-import 'calendar_month_data.dart';
+import 'package:flutter_minimal_learning/calendar/calendar_grid_painter.dart';
+import 'package:flutter_minimal_learning/calendar/calendar_month_data.dart';
 
 class CalendarPage extends StatefulWidget {
   final List<Task> tasks;

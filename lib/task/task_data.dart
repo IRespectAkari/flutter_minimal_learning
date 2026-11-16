@@ -1,5 +1,5 @@
 
-import 'task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
 // 1限〜5限の開始・終了時刻
 const periodTimes = [

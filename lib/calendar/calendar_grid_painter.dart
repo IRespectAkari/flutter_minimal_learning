@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'calendar_month_data.dart';
+import 'package:flutter_minimal_learning/calendar/calendar_month_data.dart';
 
 class CalendarGridPainter extends CustomPainter {
   CalendarGridPainter({

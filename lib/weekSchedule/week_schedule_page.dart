@@ -12,7 +12,7 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:flutter_minimal_learning/task.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 // import 'task_data.dart';
 
 const double _timeRulerWidth = 29;

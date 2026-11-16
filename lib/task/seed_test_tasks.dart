@@ -1,6 +1,6 @@
 
-import 'package:flutter_minimal_learning/task.dart';
-import 'package:flutter_minimal_learning/task_database.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
+import 'package:flutter_minimal_learning/task/task_database.dart';
 
 // 開発用：テストタスクを一括登録する
 Future<void> seedTestTasks() async {
