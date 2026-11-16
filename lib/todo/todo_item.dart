@@ -17,7 +17,7 @@ class TodoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.lightBlueAccent),
@@ -34,7 +34,7 @@ class TodoItem extends StatelessWidget {
 
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        // mainAxisSize: MainAxisSize.min,
         children: [
           Row(
               spacing: 8,
@@ -71,9 +71,7 @@ class TodoItem extends StatelessWidget {
 
   Widget _createTag(String txt) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      
-      padding: EdgeInsets.all(2),
+      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.lightBlueAccent),
