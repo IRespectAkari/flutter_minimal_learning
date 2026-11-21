@@ -80,20 +80,9 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.today,
             // offset: const Offset(-96, 0),
             offset: const Offset(-146, 0),
-            onSelected: (context) async {
-              final task = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AddTaskPage(initialIsAllDay: true,),
-                ),
-              );
-
-              if (task == null || task.title.trim().isEmpty) {
-                return;
-              }
-
-              await widget.onTaskAdded(task);
-            },
+            onSelected: _createAddTaskHandler(
+              initialIsAllDay: true,
+            ),
           ),
 
           // 左上：課題タグ付きタスク
@@ -102,22 +91,9 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.assignment_outlined,
             // offset: const Offset(-68, -68),
             offset: const Offset(-103, -103),
-            onSelected: (context) async {
-              final task = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AddTaskPage(
-                    initialTags: ['課題'],
-                  ),
-                ),
-              );
-
-              if (task == null || task.title.trim().isEmpty) {
-                return;
-              }
-
-              await widget.onTaskAdded(task);
-            },
+            onSelected: _createAddTaskHandler(
+              initialTags: ['課題'],
+            ),
           ),
 
           // 上：緊急タグ付きタスク
@@ -126,22 +102,9 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.priority_high,
             // offset: const Offset(0, -96),
             offset: const Offset(0, -146),
-            onSelected: (context) async {
-              final task = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AddTaskPage(
-                    initialTags: ['緊急'],
-                  ),
-                ),
-              );
-
-              if (task == null || task.title.trim().isEmpty) {
-                return;
-              }
-
-              await widget.onTaskAdded(task);
-            },
+            onSelected: _createAddTaskHandler(
+              initialTags: ['緊急'],
+            ),
           ),
         ],
       ),
@@ -236,5 +199,28 @@ class _TodoPageState extends State<TodoPage> {
         });
       },
     );
+  }
+
+  Future<void> Function(BuildContext) _createAddTaskHandler({
+    bool initialIsAllDay = false,
+    List<String> initialTags = const [],
+  }) {
+    return (context) async {
+      final task = await Navigator.push<Task>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AddTaskPage(
+            initialIsAllDay: initialIsAllDay,
+            initialTags: initialTags,
+          ),
+        ),
+      );
+
+      if (task == null || task.title.trim().isEmpty) {
+        return;
+      }
+
+      await widget.onTaskAdded(task);
+    };
   }
 }
