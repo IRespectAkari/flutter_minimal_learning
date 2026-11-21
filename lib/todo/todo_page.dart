@@ -50,11 +50,17 @@ class _TodoPageState extends State<TodoPage> {
       ),
 
       floatingActionButton: RadialActionButton(
-        onTap: (context) {
-          Navigator.push(
+        onTap: (context) async {
+          final task = await Navigator.push<Task>(
             context,
             MaterialPageRoute(builder: (_) => const AddTaskPage()),
           );
+
+          if (task == null || task.title.trim().isEmpty) {
+            return;
+          }
+
+          await widget.onTaskAdded(task);
         },
 
         actions: [
@@ -64,13 +70,19 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.today,
             // offset: const Offset(-96, 0),
             offset: const Offset(-146, 0),
-            onSelected: (context) {
-              Navigator.push(
+            onSelected: (context) async {
+              final task = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => const AddTaskPage(initialIsAllDay: true,),
                 ),
               );
+
+              if (task == null || task.title.trim().isEmpty) {
+                return;
+              }
+
+              await widget.onTaskAdded(task);
             },
           ),
 
@@ -80,8 +92,8 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.assignment_outlined,
             // offset: const Offset(-68, -68),
             offset: const Offset(-103, -103),
-            onSelected: (context) {
-              Navigator.push(
+            onSelected: (context) async {
+              final task = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => const AddTaskPage(
@@ -89,6 +101,12 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                 ),
               );
+
+              if (task == null || task.title.trim().isEmpty) {
+                return;
+              }
+
+              await widget.onTaskAdded(task);
             },
           ),
 
@@ -98,8 +116,8 @@ class _TodoPageState extends State<TodoPage> {
             icon: Icons.priority_high,
             // offset: const Offset(0, -96),
             offset: const Offset(0, -146),
-            onSelected: (context) {
-              Navigator.push(
+            onSelected: (context) async {
+              final task = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (_) => const AddTaskPage(
@@ -107,6 +125,12 @@ class _TodoPageState extends State<TodoPage> {
                   ),
                 ),
               );
+
+              if (task == null || task.title.trim().isEmpty) {
+                return;
+              }
+
+              await widget.onTaskAdded(task);
             },
           ),
         ],
