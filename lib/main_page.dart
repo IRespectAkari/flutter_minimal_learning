@@ -60,11 +60,13 @@ class _MainPageState extends State<MainPage> {
 
 
   List<Task> _tasks = [];
+  List<String> _tags = [];
   bool _isLoading = true;
   String? _error;
 
-  final List<String> _dropdownList = const ["1年後期", "2年前期", "2年後期"];
-  late String _selectedTerm = _dropdownList[0];
+  List<String> _dropdownList = [];
+  // late String _selectedTerm = _dropdownList[0];
+  late String _selectedTerm = "";
 
   @override
   void initState() {
@@ -146,7 +148,12 @@ class _MainPageState extends State<MainPage> {
 
   Widget _buildPageHeader(AppPage selectedPage) {
     return switch (selectedPage) {
-      AppPage.todo || AppPage.weekSchedule => Text(selectedPage.title),
+      AppPage.weekSchedule => Text(selectedPage.title),
+
+      AppPage.todo => Row(children: [
+        Text(selectedPage.title),
+        Text("（${_tasks.length}）"),
+      ],),
 
       AppPage.timetable => DropdownButton<String>(
           value: _selectedTerm,
@@ -165,6 +172,7 @@ class _MainPageState extends State<MainPage> {
     return switch (page) {
       AppPage.todo => TodoPage(
           tasks: _tasks,
+          tags: _tags,
           onTaskAdded: _addTask,
           onTaskUpdated: _updateTask,
           onTaskDeleted: _deleteTask,
