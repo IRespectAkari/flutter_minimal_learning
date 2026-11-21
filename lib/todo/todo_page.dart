@@ -6,10 +6,12 @@ import 'package:flutter_minimal_learning/radialAction/radial_action_button.dart'
 import 'package:flutter_minimal_learning/todo/add_task_page.dart';
 import 'package:flutter_minimal_learning/task/seed_test_tasks.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
+import 'package:flutter_minimal_learning/todo/tag_search_header.dart';
 import 'package:flutter_minimal_learning/todo/todo_list.dart';
 
 class TodoPage extends StatefulWidget {
   final List<Task> tasks;
+  final List<String> tags;
   final Future<void> Function(Task task) onTaskAdded;
   final Future<void> Function(Task task) onTaskUpdated;
   final Future<void> Function(Task task) onTaskDeleted;
@@ -17,6 +19,7 @@ class TodoPage extends StatefulWidget {
   const TodoPage({
     super.key,
     required this.tasks,
+    required this.tags,
     required this.onTaskAdded,
     required this.onTaskUpdated,
     required this.onTaskDeleted,
@@ -28,6 +31,7 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   String searchQuery = '';
+  String selectedTag = "";
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +41,7 @@ class _TodoPageState extends State<TodoPage> {
 
     final filteredTasks = taskList
         .where((task) => task.title.contains(searchQuery))
+        .where((task) => selectedTag == "" ? true : task.hasTag(selectedTag))
         .toList();
 
     Expanded wrapEx(child) => Expanded(child: child);
@@ -44,7 +49,12 @@ class _TodoPageState extends State<TodoPage> {
     return Scaffold(
       body: Column(
         children: [
-          _searchBar(),
+          // _searchBar(),
+          _searchHeader(widget.tags),
+          // TabBar(tabs: [
+          //   Tab(icon: Icon(Icons.incomplete_circle)),
+          //   Tab(icon: Icon(Icons.perm_contact_cal_outlined)),
+          // ]),
           _todoListExpand(filteredTasks),
         ],
       ),
@@ -194,20 +204,37 @@ class _TodoPageState extends State<TodoPage> {
 
   Padding _searchBar() {
     return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Expanded(child: TextField(
-                decoration: const InputDecoration(
-                  labelText: '検索',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(),
-                ),
-                onChanged: (value) => setState(() {searchQuery = value;}),
-              )),
-              Icon(Icons.filter_alt),
-            ],
-          ),
-        );
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Expanded(child: TextField(
+            decoration: const InputDecoration(
+              labelText: 'タスクを検索',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(),
+            ),
+            onChanged: (value) => setState(() {searchQuery = value;}),
+          )),
+          Icon(Icons.filter_alt),
+        ],
+      ),
+    );
+  }
+
+  Widget _searchHeader(List<String> tags) {
+    return TagSearchHeader(
+      tags: tags,
+      selectedTag: selectedTag,
+      onTagSelected: (tag) {
+        setState(() {
+          selectedTag = tag!;
+        });
+      },
+      onSearchChanged: (query) {
+        setState(() {
+          searchQuery = query;
+        });
+      },
+    );
   }
 }

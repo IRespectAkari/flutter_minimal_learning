@@ -48,6 +48,17 @@ extension AppPageInfo on AppPage {
 class _MainPageState extends State<MainPage> {
   AppPage _selectedPage = AppPage.calendar;
 
+  final List<String> _defaultTags = const [
+    'event',
+    'private',
+    'shopping',
+    'study',
+    'part-time',
+    'work',
+  ];
+  final List<String> _defaultDropdownlist = const ["1年後期", "2年前期", "2年後期"];
+
+
   List<Task> _tasks = [];
   bool _isLoading = true;
   String? _error;
@@ -76,6 +87,9 @@ class _MainPageState extends State<MainPage> {
 
       setState(() {
         _tasks = loadedTasks;
+        _tags = _defaultTags;
+        _dropdownList = _defaultDropdownlist;
+        _selectedTerm = _dropdownList[0];
         _isLoading = false;
       });
     } catch (e) {
