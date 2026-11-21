@@ -17,7 +17,7 @@ class TodoItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(12, 4, 12, 4),
+      padding: const EdgeInsets.all(0),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.lightBlueAccent),
@@ -31,14 +31,20 @@ class TodoItem extends StatelessWidget {
   Widget _createCheckboxListTile() {
     return CheckboxListTile(
       controlAffinity: ListTileControlAffinity.leading,
+      contentPadding: EdgeInsets.zero,
+      visualDensity: const VisualDensity(horizontal: 0, vertical: -4),
+      dense: true,
+      minTileHeight: 0,
+      minVerticalPadding: 3,
+
 
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
-              spacing: 8,
-              children: _createTags()
+              spacing: 6,
+              children: task.tags.map((txt) => _createTag(txt)).toList()
           ),
 
           Text(
@@ -46,15 +52,17 @@ class TodoItem extends StatelessWidget {
             style: TextStyle(
               // decoration: task.done ? TextDecoration.lineThrough : null
               decoration: task.isCompleted ? TextDecoration.lineThrough : null,
-              fontSize: 20,
+              fontSize: 13,
             ),
           ),
 
-          Row(children: [
-            Icon(Icons.access_time),
-            Text("期限: "),
-            Text(_limitText(task)),
-          ],),
+          Row(
+            children: [
+              Icon(Icons.access_time, size: 12),
+              Text(" 期限: ", style: TextStyle(fontSize: 10)),
+              Text(_limitText(task), style: TextStyle(fontSize: 10)),
+            ],
+          ),
         ],),
 
       value: task.isCompleted,
@@ -63,22 +71,16 @@ class TodoItem extends StatelessWidget {
     );
   }
 
-  List<Widget> _createTags() {
-    return task.tags.map((txt) {
-      return _createTag(txt);
-    }).toList();
-  }
-
   Widget _createTag(String txt) {
     return Container(
-      padding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+      padding: EdgeInsets.fromLTRB(3, 0, 3, 0),
 
       decoration: BoxDecoration(
         border: Border.all(color: Colors.lightBlueAccent),
         borderRadius: BorderRadius.circular(4),
       ),
 
-      child: Text(txt),
+      child: Text(txt, style: TextStyle(fontSize: 11)),
     );
   }
 

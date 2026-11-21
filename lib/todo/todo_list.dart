@@ -20,8 +20,12 @@ class TodoList extends StatelessWidget {
       return const Center(child: Text('タスクがありません'));
     }
 
-    return ListView.builder(
+    return ListView.separated(
       itemCount: tasks.length,
+
+      padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+
+      separatorBuilder: (context, index) => const SizedBox(height: 5),
 
       itemBuilder: (context, index){
         return TodoItem(
