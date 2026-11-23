@@ -69,7 +69,8 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
       spacing: 4,
       children: [
         // 完了/未完了/全て 選択タブ
-        _buildChoiceCondition(widget.statusCounts),
+        // _buildChoiceCondition(widget.statusCounts),
+        _buildChoiceConditionTab(widget.statusCounts/*, widget.selectedState*/),
 
         // 検索入力欄
         _buildSearchField(),
@@ -296,4 +297,54 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
       showCheckmark: false, // チェックマークを消す
     );
   }
+
+  Widget _buildChoiceConditionTab(Map<TaskStatusFilter, int> statusCounts/*, TaskStatusFilter selectedState*/) {
+    // return Row(
+    //   spacing: 4.0,
+    //   children: TaskStatusFilter.values
+    //       .map((filter) => _buildStatusChip(filter, statusCounts))
+    //       .map((filter) => Expanded(child: filter))
+    //       .toList(),
+    // );
+
+    return DefaultTabController(
+      length: TaskStatusFilter.values.length, // 3つ（全て・未完了・完了）
+      // initialIndex: TaskStatusFilter.values.indexOf(selectedState),
+      initialIndex: TaskStatusFilter.values.indexOf(TaskStatusFilter.todo),
+      child: TabBar(
+        // 画像のように左寄せにしたい場合は isScrollable: true にする
+        // 画面幅いっぱいに3等分したい場合は false（デフォルト）にする
+        // isScrollable: true,
+        isScrollable: false,
+
+        // tabAlignment: TabAlignment.start, // 左寄せ時の余計な左余白を消す（Flutter 3.13以降）
+
+        // デザイン調整（画像のような紫〜紺色の下線と文字色）
+        labelColor: const Color(0xFF4A4478),       // 選択中の文字色
+        unselectedLabelColor: Colors.grey,         // 非選択の文字色
+        indicatorColor: const Color(0xFF4A4478),   // 下線の色
+        indicatorWeight: 2.5,                      // 下線の太さ
+        // indicatorSize: TabBarIndicatorSize.label,  // 下線の長さを文字幅に合わせる
+        indicatorSize: TabBarIndicatorSize.tab,  // 下線の長さをタブの幅に合わせる
+
+        // タブがタップされたときの処理
+        onTap: (index) {
+          setState(() {
+            // selectedState = TaskStatusFilter.values[index];
+            widget.onStateSelected(TaskStatusFilter.values[index]);
+          });
+        },
+
+        // タブの生成（「未完了 (8)」のような表示）
+        tabs: TaskStatusFilter.values.map((filter) {
+          final count = statusCounts[filter];
+          return Tab(
+            text: '${filter.label} ($count)',
+          );
+        }).toList(),
+      ),
+    );
+
+  }
+
 }
