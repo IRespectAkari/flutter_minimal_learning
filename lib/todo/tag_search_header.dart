@@ -6,6 +6,7 @@ class TagSearchHeader extends StatefulWidget {
   final List<String> tags;
   final Set<String> selectedTags;
   final TaskStatusFilter selectedState;
+  final Map<TaskStatusFilter, int> statusCounts;
   final ValueChanged<String?> onTagSelected;
   final ValueChanged<String> onSearchChanged;
   final ValueChanged<TaskStatusFilter> onStateSelected;
@@ -15,6 +16,7 @@ class TagSearchHeader extends StatefulWidget {
     required this.tags,
     required this.selectedTags,
     required this.selectedState,
+    required this.statusCounts,
     required this.onTagSelected,
     required this.onSearchChanged,
     required this.onStateSelected,
@@ -67,7 +69,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
       spacing: 4,
       children: [
         // 完了/未完了/全て 選択タブ
-        _buildChoiceCondition(),
+        _buildChoiceCondition(widget.statusCounts),
 
         // 検索入力欄
         _buildSearchField(),
@@ -211,7 +213,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
     );
   }
 
-  Widget _buildChoiceCondition() {
+  Widget _buildChoiceCondition(Map<TaskStatusFilter, int> statusCounts) {
     // return Row(
     //   spacing: 4,
     //   children: [
@@ -241,7 +243,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
     return Row(
       spacing: 4.0,
       children: TaskStatusFilter.values
-          .map((filter) => _buildStatusChip(filter))
+          .map((filter) => _buildStatusChip(filter, statusCounts))
           .map((filter) => Expanded(child: filter))
           .toList(),
       // children: [
@@ -254,7 +256,10 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
     );
   }
 
-  Widget _buildStatusChip(TaskStatusFilter filter) {
+  Widget _buildStatusChip(
+    TaskStatusFilter filter,
+    Map<TaskStatusFilter, int> statusCounts
+  ) {
     // final selected = widget.selectedState == filter;
 
     // final selected = "" == filter;
@@ -273,7 +278,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
       label: SizedBox(
         width: double.infinity,
         child: Text(
-          filter.label,
+          "${filter.label}（${statusCounts[filter]}）",
           textAlign: TextAlign.center
         )
       ),

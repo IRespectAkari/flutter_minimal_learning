@@ -46,6 +46,16 @@ class _TodoPageState extends State<TodoPage> {
         .where((task) => selectedState.matches(task.status))
         .toList();
 
+    final Map<TaskStatusFilter, int> statusCounts = {
+      for(final filter in TaskStatusFilter.values)
+        filter: taskList
+            .where((task) => task.title.contains(searchQuery))
+            .where((task) => selectedTags.isEmpty || selectedTags.every((tag) => task.hasTag(tag)))
+            .where((task) => filter.matches(task.status))
+            .length
+    };
+
+
     Expanded wrapEx(child) => Expanded(child: child);
 
     return Scaffold(
@@ -56,7 +66,7 @@ class _TodoPageState extends State<TodoPage> {
           spacing: 8,
           children: [
             // _searchBar(),
-            _searchHeader(widget.tags),
+            _searchHeader(widget.tags, statusCounts),
             // TabBar(tabs: [
             //   Tab(icon: Icon(Icons.incomplete_circle)),
             //   Tab(icon: Icon(Icons.perm_contact_cal_outlined)),
@@ -191,11 +201,12 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
-  Widget _searchHeader(List<String> tags) {
+  Widget _searchHeader(List<String> tags, Map<TaskStatusFilter, int> statusCounts) {
     return TagSearchHeader(
       tags: tags,
       selectedTags: selectedTags,
       selectedState: selectedState,
+      statusCounts: statusCounts,
       onTagSelected: (tag) {
         setState(() {
           if(tag == null || tag.isEmpty) {
