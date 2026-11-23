@@ -1,18 +1,23 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/task/task.dart';
 
 class TagSearchHeader extends StatefulWidget {
   final List<String> tags;
   final Set<String> selectedTags;
+  final TaskStatusFilter selectedState;
   final ValueChanged<String?> onTagSelected;
   final ValueChanged<String> onSearchChanged;
+  final ValueChanged<TaskStatusFilter> onStateSelected;
 
   const TagSearchHeader({
     super.key,
     required this.tags,
     required this.selectedTags,
+    required this.selectedState,
     required this.onTagSelected,
     required this.onSearchChanged,
+    required this.onStateSelected,
   });
 
   @override
@@ -59,10 +64,10 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      spacing: 8,
+      spacing: 4,
       children: [
         // 完了/未完了/全て 選択タブ
-        // _buildChoiceCondition(),
+        _buildChoiceCondition(),
 
         // 検索入力欄
         _buildSearchField(),
@@ -183,18 +188,107 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
   }
 
   Widget _buildTag(String label, String? value) {
+    var tag = (
+      color: Color(0xFFF8E8E7),
+      label: label,
+      value: value,
+    );
+
     // valueが "" または null（「全て」ボタン）なら、選択リストが空のときにtrueにする
-    final bool selected = (value == null || value.isEmpty)
+    final bool selected = (tag.value == null || tag.value!.isEmpty)
         ? widget.selectedTags.isEmpty
-        : widget.selectedTags.contains(value);
+        : widget.selectedTags.contains(tag.value);
 
     return FilterChip(
-      label: Text(label),
+      label: Text(tag.label),
       selected: selected,
-      onSelected: (_) => widget.onTagSelected(value),
+      onSelected: (_) => widget.onTagSelected(tag.value),
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
+      showCheckmark: false, // チェックマークを消す
+      backgroundColor: tag.color,
+    );
+  }
+
+  Widget _buildChoiceCondition() {
+    // return Row(
+    //   spacing: 4,
+    //   children: [
+    //     _buildStatusChip("未完了", TaskStatus.todo.toString()),
+    //     _buildStatusChip("完了", TaskStatus.completed.toString()),
+    //     _buildStatusChip("すべて", TaskStatus.todo.toString()),
+    //   ],
+    // );
+
+    // 3. UI部分（SegmentedButton）
+    // return SegmentedButton<TaskStatusFilter>(
+    //   segments: const [
+    //     ButtonSegment(value: TaskStatusFilter.all, label: Text('全て')),
+    //     ButtonSegment(value: TaskStatusFilter.incomplete, label: Text('未完了')),
+    //     ButtonSegment(value: TaskStatusFilter.completed, label: Text('完了')),
+    //   ],
+    //   selected: {_statusFilter}, // 常に1つだけ選択される
+    //   onSelectionChanged: (Set<TaskStatusFilter> newSelection) {
+    //     setState(() {
+    //       _statusFilter = newSelection.first;
+    //     });
+    //   },
+    // );
+
+    // UI部分
+    // return Wrap(
+    return Row(
+      spacing: 4.0,
+      children: TaskStatusFilter.values
+          .map((filter) => _buildStatusChip(filter))
+          .map((filter) => Expanded(child: filter))
+          .toList(),
+      // children: [
+      //   // _buildStatusChip('全て', TaskStatusFilter.all),
+      //
+      //   _buildStatusChip('全て', TaskStatusFilter.all),
+      //   _buildStatusChip('未完了', TaskStatusFilter.todo),
+      //   _buildStatusChip('完了', TaskStatusFilter.completed),
+      // ],
+    );
+  }
+
+  Widget _buildStatusChip(TaskStatusFilter filter) {
+    // final selected = widget.selectedState == filter;
+
+    // final selected = "" == filter;
+    //
+    // return FilterChip(
+    //     label: Text(label),
+    //     selected: selected,
+    //     onSelected: (_) => widget.onTagSelected(filter),
+    //     visualDensity: VisualDensity.compact,
+    //     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    //     padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
+    //   );
+    final selected = (widget.selectedState == filter);
+
+    return ChoiceChip(
+      label: SizedBox(
+        width: double.infinity,
+        child: Text(
+          filter.label,
+          textAlign: TextAlign.center
+        )
+      ),
+      selected: selected,
+      onSelected: (bool selected) {
+        // すでに選択中のものを再度タップしたとき（selected == false）は無視する
+        if (selected) {
+          setState(() {
+            widget.onStateSelected(filter);
+          });
+        }
+      },
+      visualDensity: VisualDensity.compact,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      showCheckmark: false, // チェックマークを消す
     );
   }
 }

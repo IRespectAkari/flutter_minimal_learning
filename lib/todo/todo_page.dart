@@ -32,6 +32,7 @@ class TodoPage extends StatefulWidget {
 class _TodoPageState extends State<TodoPage> {
   String searchQuery = '';
   Set<String> selectedTags = {};
+  TaskStatusFilter selectedState = TaskStatusFilter.todo;
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +42,8 @@ class _TodoPageState extends State<TodoPage> {
 
     final filteredTasks = taskList
         .where((task) => task.title.contains(searchQuery))
-        .where((task) {
-          if (selectedTags.isEmpty) return true;
-          return selectedTags.every((tag) => task.hasTag(tag));
-        })
+        .where((task) => selectedTags.isEmpty || selectedTags.every((tag) => task.hasTag(tag)))
+        .where((task) => selectedState.matches(task.status))
         .toList();
 
     Expanded wrapEx(child) => Expanded(child: child);
@@ -196,6 +195,7 @@ class _TodoPageState extends State<TodoPage> {
     return TagSearchHeader(
       tags: tags,
       selectedTags: selectedTags,
+      selectedState: selectedState,
       onTagSelected: (tag) {
         setState(() {
           if(tag == null || tag.isEmpty) {
@@ -210,6 +210,11 @@ class _TodoPageState extends State<TodoPage> {
       onSearchChanged: (query) {
         setState(() {
           searchQuery = query;
+        });
+      },
+      onStateSelected: (state) {
+        setState(() {
+          selectedState = state;
         });
       },
     );

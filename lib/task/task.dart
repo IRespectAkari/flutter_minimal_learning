@@ -1,10 +1,36 @@
 import 'dart:convert';
 
+// 1. タスク自体の状態
 enum TaskStatus {
   todo,
   inProgress,
   completed,
   cancelled,
+}
+
+// 2. 絞り込みタブ用のenum
+enum TaskStatusFilter {
+  todo('未完了'),
+  completed('完了'),
+  all('全て');
+
+  // 表示用のラベル
+  final String label;
+  const TaskStatusFilter(this.label);
+
+  // このフィルター条件に、タスクのステータスが合致するかを判定するメソッド
+  bool matches(TaskStatus status) {
+    switch (this) {
+      case TaskStatusFilter.all:
+        return true; // 全てなら無条件でOK
+      case TaskStatusFilter.todo:
+      // ※ inProgress（進行中）も「未完了」に含めるなら
+        return status == TaskStatus.todo || status == TaskStatus.inProgress;
+    // もし純粋な todo だけなら: return status == TaskStatus.todo;
+      case TaskStatusFilter.completed:
+        return status == TaskStatus.completed;
+    }
+  }
 }
 
 class Task {
@@ -51,6 +77,37 @@ class Task {
       throw ArgumentError('終了日時は開始日時より前にできません');
     }
   }
+
+  Task.draft({
+    String id = "0000",
+    String title = "",
+    String description = '',
+    DateTime? startTime,
+    DateTime? endTime,
+    bool isAllDay = false,
+    List<String> tags = const [],
+    Map<String, String> details = const {},
+    TaskStatus status = TaskStatus.todo,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? reminderTime,
+    String? recurrence, // 元の型に合わせて調整してください
+  })  : this(
+          id: id,
+          title: title,
+          description: description,
+          startTime: startTime ?? DateTime.now(),
+          endTime: endTime ?? (startTime ?? DateTime.now()).add(const Duration(hours: 1)),
+          isAllDay: isAllDay,
+          tags: tags, // 通常コンストラクタ側で List.from されるので安全！
+          details: details, // こちらも Map.from されるので安全！
+          status: status,
+          createdAt: createdAt,
+          updatedAt: updatedAt,
+          reminderTime: reminderTime,
+          recurrence: recurrence,
+        );
+
 
   bool get isCompleted => status == TaskStatus.completed;
 
