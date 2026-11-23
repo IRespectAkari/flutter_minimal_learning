@@ -66,6 +66,8 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
     if (date == null || !mounted) return null;
 
+    if (_isAllDay) return DateTime(date.year, date.month, date.day);
+
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(initial),
@@ -104,42 +106,37 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 },
               ),
 
-              if (!_isAllDay) ...[
-                ListTile(
-                  title: const Text('開始日時'),
-                  subtitle: Text(
-                    '${_startTime.year}/'
-                        '${_startTime.month}/'
-                        '${_startTime.day} '
-                        '${_startTime.hour.toString().padLeft(2, '0')}:'
-                        '${_startTime.minute.toString().padLeft(2, '0')}',
-                  ),
-                  trailing: const Icon(Icons.edit_calendar),
-                  onTap: () async {
-                    final result = await _pickDateTime(_startTime);
-
-                    if (result != null && mounted) {
-                      setState(() {
-                        _startTime = result;
-
-                        // 終了時刻が開始時刻以前になった場合は1時間後にする
-                        if (!_endTime.isAfter(_startTime)) {
-                          _endTime = _startTime.add(
-                            const Duration(hours: 1),
-                          );
-                        }
-                      });
-                    }
-                  },
+              // if (!_isAllDay) ...[
+              ListTile(
+                title: const Text('開始日時'),
+                subtitle: Text(
+                  '${_startTime.year}/${_startTime.month}/${_startTime.day}'
+                  '${_isAllDay ? "" : ' ${_startTime.hour.toString().padLeft(2, '0')}:${_startTime.minute.toString().padLeft(2, '0')}'}',
                 ),
+                trailing: const Icon(Icons.edit_calendar),
+                onTap: () async {
+                  final result = await _pickDateTime(_startTime);
+
+                  if (result != null && mounted) {
+                    setState(() {
+                      _startTime = result;
+
+                      // 終了時刻が開始時刻以前になった場合は1時間後にする
+                      if (!_endTime.isAfter(_startTime)) {
+                        _endTime = _startTime.add(
+                          const Duration(hours: 1),
+                        );
+                      }
+                    });
+                  }
+                },
+              ),
+              if (!_isAllDay)
                 ListTile(
                   title: const Text('終了日時'),
                   subtitle: Text(
-                    '${_endTime.year}/'
-                        '${_endTime.month}/'
-                        '${_endTime.day} '
-                        '${_endTime.hour.toString().padLeft(2, '0')}:'
-                        '${_endTime.minute.toString().padLeft(2, '0')}',
+                    '${_endTime.year}/${_endTime.month}/${_endTime.day} '
+                    '${_isAllDay ? "" : ' ${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}'}',
                   ),
                   trailing: const Icon(Icons.edit_calendar),
                   onTap: () async {
@@ -152,7 +149,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                     }
                   },
                 ),
-              ],
+              // ],
               const SizedBox(height: 16),
 
               ElevatedButton(
