@@ -156,6 +156,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   },
                 ),
               // ],
+
+              _tags(),
+
               const SizedBox(height: 16),
 
               ElevatedButton(
@@ -175,6 +178,40 @@ class _AddTaskPageState extends State<AddTaskPage> {
             ],
           )
       ),
+    );
+  }
+
+  Widget _tags() {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: widget.allTags.map((tag) => _buildTag(tag, tag)).toList(),
+    );
+  }
+
+  Widget _buildTag(String label, String? value) {
+    var tag = (
+      color: Color(0xFFF8E8E7),
+      label: label,
+      value: value,
+    );
+
+    // valueが "" または null（「全て」ボタン）なら、選択リストが空のときにtrueにする
+    // final bool selected = (tag.value == null || tag.value!.isEmpty)
+    //     ? _selectedTags.isEmpty
+    //     : _selectedTags.contains(tag.value);
+    final bool selected = _selectedTags.contains(tag.value);
+
+    return FilterChip(
+      label: Text(tag.label),
+      selected: selected,
+      onSelected: (_) => _selectedTags.add(tag.label),
+      visualDensity: VisualDensity.compact,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
+      showCheckmark: false, // チェックマークを消す
+      backgroundColor: tag.color,
+      selectedColor: Colors.lightBlueAccent,
     );
   }
 }
