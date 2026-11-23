@@ -1,4 +1,5 @@
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_minimal_learning/radialAction/radial_action.dart';
@@ -51,11 +52,23 @@ class _RadialActionButtonState extends State<RadialActionButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPressStart: _handleLongPressStart,
-      onLongPressMoveUpdate: _handleLongPressMoveUpdate,
-      onLongPressEnd: _handleLongPressEnd,
-      onLongPressCancel: _handleLongPressCancel,
+    return RawGestureDetector(gestures: {
+      LongPressGestureRecognizer:
+        GestureRecognizerFactoryWithHandlers<LongPressGestureRecognizer>(
+          // 長押し判定時間
+          () => LongPressGestureRecognizer(duration: const Duration(milliseconds: 300)),
+
+          // コールバックの設定
+          (instance) {
+            instance
+              ..onLongPressStart = _handleLongPressStart
+              ..onLongPressMoveUpdate = _handleLongPressMoveUpdate
+              ..onLongPressEnd = _handleLongPressEnd
+              ..onLongPressCancel = _handleLongPressCancel;
+          },
+        ),
+    },
+
 
       child: FloatingActionButton(
         key: _fabKey,
