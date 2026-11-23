@@ -47,16 +47,21 @@ class _TodoPageState extends State<TodoPage> {
     Expanded wrapEx(child) => Expanded(child: child);
 
     return Scaffold(
-      body: Column(
-        children: [
-          // _searchBar(),
-          _searchHeader(widget.tags),
-          // TabBar(tabs: [
-          //   Tab(icon: Icon(Icons.incomplete_circle)),
-          //   Tab(icon: Icon(Icons.perm_contact_cal_outlined)),
-          // ]),
-          _todoListExpand(filteredTasks),
-        ],
+
+      body: Padding(
+        padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+        child: Column(
+          spacing: 8,
+          children: [
+            // _searchBar(),
+            _searchHeader(widget.tags),
+            // TabBar(tabs: [
+            //   Tab(icon: Icon(Icons.incomplete_circle)),
+            //   Tab(icon: Icon(Icons.perm_contact_cal_outlined)),
+            // ]),
+            _todoListExpand(filteredTasks),
+          ],
+        )
       ),
 
       floatingActionButton: RadialActionButton(

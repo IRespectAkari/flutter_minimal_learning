@@ -152,7 +152,8 @@ class _MainPageState extends State<MainPage> {
 
       AppPage.todo => Row(children: [
         Text(selectedPage.title),
-        Text("（${_tasks.length}）"),
+        // todo: hasTag("course")を1か所にまとめる
+        Text("（${_tasks.where((task) => !task.hasTag('course')).length}）"),
       ],),
 
       AppPage.timetable => DropdownButton<String>(
