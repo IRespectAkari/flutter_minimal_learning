@@ -98,20 +98,23 @@ class _MainPageState extends State<MainPage> {
     if (!mounted) return;
     setState(() {
       _tasks.add(task);
-      _tasks.sort(
-            (a, b) => a.startTime.compareTo(b.startTime),
-      );
+      _tasks.sort((a, b) => a.startTime.compareTo(b.startTime));
     });
   }
 
   // タスク更新
-  Future<void> _updateTask(Task task) async {
-    await TaskDatabase.instance.updateTask(task);
+  Future<void> _updateTask(Task updatedTask) async {
+    await TaskDatabase.instance.updateTask(updatedTask);
 
     if (!mounted) return;
     setState(() {
       // Taskは既存オブジェクトを更新しているため、
       // setStateによって各画面を再描画する。
+      final index = _tasks.indexWhere((task) => task.id == updatedTask.id);
+      if (index != -1){
+        _tasks[index] = updatedTask;
+        _tasks.sort((a, b) => a.startTime.compareTo(b.startTime));
+      }
     });
   }
 
