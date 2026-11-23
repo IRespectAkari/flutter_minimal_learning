@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class TagSearchHeader extends StatefulWidget {
   final List<String> tags;
-  final String? selectedTag;
+  final Set<String> selectedTags;
   final ValueChanged<String?> onTagSelected;
   final ValueChanged<String> onSearchChanged;
 
   const TagSearchHeader({
     super.key,
     required this.tags,
-    required this.selectedTag,
+    required this.selectedTags,
     required this.onTagSelected,
     required this.onSearchChanged,
   });
@@ -183,7 +183,10 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
   }
 
   Widget _buildTag(String label, String? value) {
-    final selected = widget.selectedTag == value;
+    // valueが "" または null（「全て」ボタン）なら、選択リストが空のときにtrueにする
+    final bool selected = (value == null || value.isEmpty)
+        ? widget.selectedTags.isEmpty
+        : widget.selectedTags.contains(value);
 
     return FilterChip(
       label: Text(label),
@@ -191,7 +194,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
       onSelected: (_) => widget.onTagSelected(value),
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-      padding: EdgeInsets.fromLTRB(1, 4, 1, 4),
+      padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
     );
   }
 }
