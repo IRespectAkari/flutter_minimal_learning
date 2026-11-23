@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:uuid/uuid.dart';
 
 // 1. タスク自体の状態
 enum TaskStatus {
@@ -34,28 +35,32 @@ enum TaskStatusFilter {
 }
 
 class Task {
+  static final Uuid _uuid = Uuid();
+
+  static String generateId() => _uuid.v4();
+
   final String id;
-  String title;
-  String description;
+  final String title;
+  final String description;
 
-  DateTime startTime;
-  DateTime endTime;
+  final DateTime startTime;
+  final DateTime endTime;
 
-  bool isAllDay;
-  List<String> tags;
-  Map<String, String> details;
+  final bool isAllDay;
+  final List<String> tags;
+  final Map<String, String> details;
 
-  TaskStatus status;
+  final TaskStatus status;
 
   final DateTime createdAt;
-  DateTime updatedAt;
+  final DateTime updatedAt;
 
-  DateTime? reminderTime;
+  final DateTime? reminderTime;
 
   // 例: 'weekly'、'daily'
-  String? recurrence;
+  final String? recurrence;
 
-  Task({
+  Task._({
     required this.id,
     required this.title,
     this.description = '',
@@ -69,8 +74,8 @@ class Task {
     DateTime? updatedAt,
     this.reminderTime,
     this.recurrence,
-  })  : tags = List<String>.from(tags),
-        details = Map<String, String>.from(details),
+  })  : tags = List<String>.unmodifiable(tags),
+        details = Map<String, String>.unmodifiable(details),
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now() {
     if (endTime.isBefore(startTime)) {
@@ -78,8 +83,8 @@ class Task {
     }
   }
 
-  Task.draft({
-    String id = "0000-draft-id",
+  factory Task.draft({
+    // String id = "0000-draft-id",
     String title = "xxxx-draft-title",
     String description = '',
     DateTime? startTime,
@@ -92,28 +97,32 @@ class Task {
     DateTime? updatedAt,
     DateTime? reminderTime,
     String? recurrence, // 元の型に合わせて調整してください
-  })  : this(
-          id: id,
-          title: title,
-          description: description,
-          startTime: startTime ?? DateTime.now(),
-          endTime: endTime ?? (startTime ?? DateTime.now()).add(const Duration(hours: 1)),
-          isAllDay: isAllDay,
-          tags: tags, // 通常コンストラクタ側で List.from されるので安全！
-          details: details, // こちらも Map.from されるので安全！
-          status: status,
-          createdAt: createdAt,
-          updatedAt: updatedAt,
-          reminderTime: reminderTime,
-          recurrence: recurrence,
-        );
-
+  }) {
+    return Task._(
+      id: generateId(),
+      title: title,
+      description: description,
+      startTime: startTime ?? DateTime.now(),
+      endTime: endTime ?? (startTime ?? DateTime.now()).add(const Duration(hours: 1)),
+      isAllDay: isAllDay,
+      tags: tags, // 通常コンストラクタ側で List.from されるので安全！
+      details: details, // こちらも Map.from されるので安全！
+      status: status,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      reminderTime: reminderTime,
+      recurrence: recurrence,
+    );
+  }
 
   bool get isCompleted => status == TaskStatus.completed;
 
   bool hasTag(String tag) => tags.contains(tag);
 
-  void update({
+  static const Object _unset = Object();
+
+  Task copyWith({
+    // String? id,// idを引き継ぐために、引数に書かない
     String? title,
     String? description,
     DateTime? startTime,
@@ -122,32 +131,105 @@ class Task {
     List<String>? tags,
     Map<String, String>? details,
     TaskStatus? status,
-    DateTime? reminderTime,
-    String? recurrence,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Object? reminderTime = _unset,
+    Object? recurrence = _unset,
   }) {
-    final newStart = startTime ?? this.startTime;
-    final newEnd = endTime ?? this.endTime;
-
-    if (newEnd.isBefore(newStart)) {
-      throw ArgumentError('終了日時は開始日時より前にできません');
-    }
-
-    if (title != null) this.title = title;
-    if (description != null) this.description = description;
-    this.startTime = newStart;
-    this.endTime = newEnd;
-
-    if (isAllDay != null) this.isAllDay = isAllDay;
-    if (tags != null) this.tags = List<String>.from(tags);
-    if (details != null) {
-      this.details = Map<String, String>.from(details);
-    }
-    if (status != null) this.status = status;
-    if (reminderTime != null) this.reminderTime = reminderTime;
-    if (recurrence != null) this.recurrence = recurrence;
-
-    updatedAt = DateTime.now();
+    return Task._(
+      // id: id ?? this.id,
+      id: this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      isAllDay: isAllDay ?? this.isAllDay,
+      tags: tags ?? this.tags,
+      details: details ?? this.details,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      reminderTime: identical(reminderTime, _unset)
+          ? this.reminderTime
+          : reminderTime as DateTime?,
+      recurrence: identical(recurrence, _unset)
+          ? this.recurrence
+          : recurrence as String?,
+    );
   }
+
+  Task copyAsNew({
+    // String? id,// idを新規作成する為に、引数に書かない
+    String? title,
+    String? description,
+    DateTime? startTime,
+    DateTime? endTime,
+    bool? isAllDay,
+    List<String>? tags,
+    Map<String, String>? details,
+    TaskStatus? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    Object? reminderTime = _unset,
+    Object? recurrence = _unset,
+  }) {
+    return Task._(
+      // id: id ?? this.id,
+      id: generateId(),
+      title: title ?? this.title,
+      description: description ?? this.description,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      isAllDay: isAllDay ?? this.isAllDay,
+      tags: tags ?? this.tags,
+      details: details ?? this.details,
+      status: status ?? this.status,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      reminderTime: identical(reminderTime, _unset)
+          ? this.reminderTime
+          : reminderTime as DateTime?,
+      recurrence: identical(recurrence, _unset)
+          ? this.recurrence
+          : recurrence as String?,
+    );
+  }
+
+  // void update({
+  //   String? title,
+  //   String? description,
+  //   DateTime? startTime,
+  //   DateTime? endTime,
+  //   bool? isAllDay,
+  //   List<String>? tags,
+  //   Map<String, String>? details,
+  //   TaskStatus? status,
+  //   DateTime? reminderTime,
+  //   String? recurrence,
+  // }) {
+  //   final newStart = startTime ?? this.startTime;
+  //   final newEnd = endTime ?? this.endTime;
+  //
+  //   if (newEnd.isBefore(newStart)) {
+  //     throw ArgumentError('終了日時は開始日時より前にできません');
+  //   }
+  //
+  //   if (title != null) this.title = title;
+  //   if (description != null) this.description = description;
+  //   this.startTime = newStart;
+  //   this.endTime = newEnd;
+  //
+  //   if (isAllDay != null) this.isAllDay = isAllDay;
+  //   if (tags != null) this.tags = List<String>.from(tags);
+  //   if (details != null) {
+  //     this.details = Map<String, String>.from(details);
+  //   }
+  //   if (status != null) this.status = status;
+  //   if (reminderTime != null) this.reminderTime = reminderTime;
+  //   if (recurrence != null) this.recurrence = recurrence;
+  //
+  //   updatedAt = DateTime.now();
+  // }
 
   // DB(SQLite)に保存するための変換メソッド
   Map<String, Object?> toMap() {
@@ -170,7 +252,7 @@ class Task {
 
   // DB(SQLite)から取り出すための変換メソッド
   factory Task.fromMap(Map<String, Object?> map) {
-    return Task(
+    return Task._(
       id: map['id'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
