@@ -58,6 +58,41 @@ class _TodoPageState extends State<TodoPage> {
 
     Expanded wrapEx(child) => Expanded(child: child);
 
+    List<RadialAction> list = [
+      // 左：終日タスク
+      RadialAction(
+        label: "終日",
+        icon: Icons.today,
+        // offset: const Offset(-96, 0),
+        offset: const Offset(-146, 0),
+        onSelected: _createAddTaskHandler(
+          draftTask: Task.draft(isAllDay: true),
+        ),
+      ),
+
+      // 左上：課題タグ付きタスク
+      RadialAction(
+        label: '課題',
+        icon: Icons.assignment_outlined,
+        // offset: const Offset(-68, -68),
+        offset: const Offset(-103, -103),
+        onSelected: _createAddTaskHandler(
+          draftTask: Task.draft(tags: ['課題']),
+        ),
+      ),
+
+      // 上：緊急タグ付きタスク
+      RadialAction(
+        label: '緊急',
+        icon: Icons.priority_high,
+        // offset: const Offset(0, -96),
+        offset: const Offset(0, -146),
+        onSelected: _createAddTaskHandler(
+          draftTask: Task.draft(tags: ['緊急']),
+        ),
+      ),
+    ];
+
     return Scaffold(
 
       body: Padding(
@@ -79,43 +114,7 @@ class _TodoPageState extends State<TodoPage> {
       floatingActionButton: RadialActionButton(
         onTap: _createAddTaskHandler(),
 
-        actions: [
-          // 左：終日タスク
-          RadialAction(
-            label: '終日',
-            icon: Icons.today,
-            // offset: const Offset(-96, 0),
-            offset: const Offset(-146, 0),
-            onSelected: _createAddTaskHandler(
-              // initialIsAllDay: true,
-              draftTask: Task.draft(isAllDay: true),
-            ),
-          ),
-
-          // 左上：課題タグ付きタスク
-          RadialAction(
-            label: '課題',
-            icon: Icons.assignment_outlined,
-            // offset: const Offset(-68, -68),
-            offset: const Offset(-103, -103),
-            onSelected: _createAddTaskHandler(
-              // initialTags: ['課題'],
-              draftTask: Task.draft(tags: ['課題']),
-            ),
-          ),
-
-          // 上：緊急タグ付きタスク
-          RadialAction(
-            label: '緊急',
-            icon: Icons.priority_high,
-            // offset: const Offset(0, -96),
-            offset: const Offset(0, -146),
-            onSelected: _createAddTaskHandler(
-              // initialTags: ['緊急'],
-              draftTask: Task.draft(tags: ['緊急']),
-            ),
-          ),
-        ],
+        actions: list,
       ),
 
 
@@ -223,18 +222,12 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
-  Future<void> Function(BuildContext) _createAddTaskHandler({
-    // bool initialIsAllDay = false,
-    // List<String> initialTags = const [],
-    Task? draftTask
-  }) {
+  Future<void> Function(BuildContext) _createAddTaskHandler({Task? draftTask}) {
     return (context) async {
       final task = await Navigator.push<Task>(
         context,
         MaterialPageRoute(
           builder: (_) => AddTaskPage(
-            // initialIsAllDay: initialIsAllDay,
-            // initialTags: initialTags,
             allTags: widget.tags,
             initialTask: draftTask,
           ),
