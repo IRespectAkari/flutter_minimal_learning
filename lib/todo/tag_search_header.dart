@@ -158,35 +158,54 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
     return Row(
       children: [
         Expanded(
-          child: TextField(
-            controller: _controller,
-            focusNode: _focusNode,
-            onChanged: widget.onSearchChanged,
-            decoration: InputDecoration(
-              hintText: 'タスクを検索...',
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  _controller.clear();
-                  widget.onSearchChanged('');
-                },
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              contentPadding:
-              const EdgeInsets.symmetric(vertical: 10),
-              isDense: true,
-            ),
-          ),
+          child: _searchTextField(),
         ),
 
         TextButton(
           onPressed: _closeSearch,
+          style: TextButton.styleFrom(
+            minimumSize: Size.zero,
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           child: const Text('キャンセル'),
         ),
       ],
+    );
+  }
+
+  TextField _searchTextField() {
+    return TextField(
+      controller: _controller,
+      focusNode: _focusNode,
+      onChanged: widget.onSearchChanged,
+      decoration: InputDecoration(
+        hintText: 'タイトルからタスクを検索',
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            _controller.clear();
+            widget.onSearchChanged('');
+          },
+          constraints: const BoxConstraints(),
+          iconSize: 20,
+          padding: EdgeInsets.all(0),
+          style: IconButton.styleFrom(
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            minimumSize: Size.zero,
+            padding: const EdgeInsets.all(4),
+          ),
+        ),
+        suffixIconConstraints: const BoxConstraints(
+          minHeight: 24,
+          minWidth: 24,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        isDense: true,
+      ),
     );
   }
 
@@ -339,8 +358,27 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
         tabs: TaskStatusFilter.values.map((filter) {
           final count = statusCounts[filter];
           return Tab(
-            text: '${filter.label} ($count)',
             height: 35,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(width: 13),
+
+                Text(filter.label),
+
+                const SizedBox(width: 4),
+
+                // todo: 4桁を超えたときに改行する仕組みを作る
+                SizedBox(
+                  width: 36,
+                  child: Text(
+                    "($count)",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
+                  ),
+                )
+              ],
+            ),
           );
         }).toList(),
       ),
