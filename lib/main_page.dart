@@ -35,19 +35,19 @@ enum AppPage {
 class _MainPageState extends State<MainPage> {
   AppPage _selectedPage = AppPage.calendar;
 
-  final List<String> _defaultTags = const [
+  final Set<String> _defaultTags = const {
     'event',
     'private',
     'shopping',
     'study',
     'part-time',
     'work',
-  ];
+  };
   final List<String> _defaultDropdownlist = const ["1年後期", "2年前期", "2年後期"];
 
 
   List<Task> _tasks = [];
-  List<String> _tags = [];
+  Set<String> _tags = {};
   bool _isLoading = true;
   String? _error;
 

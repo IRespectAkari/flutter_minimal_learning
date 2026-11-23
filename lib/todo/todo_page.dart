@@ -11,7 +11,7 @@ import 'package:flutter_minimal_learning/todo/todo_list.dart';
 
 class TodoPage extends StatefulWidget {
   final List<Task> tasks;
-  final List<String> tags;
+  final Set<String> tags;
   final Future<void> Function(Task task) onTaskAdded;
   final Future<void> Function(Task task) onTaskUpdated;
   final Future<void> Function(Task task) onTaskDeleted;
@@ -77,7 +77,7 @@ class _TodoPageState extends State<TodoPage> {
         // offset: const Offset(-68, -68),
         offset: const Offset(-103, -103),
         onSelected: _createAddTaskHandler(
-          draftTask: Task.draft(tags: ['課題']),
+          draftTask: Task.draft(tags: {'課題'}),
         ),
       ),
 
@@ -88,7 +88,7 @@ class _TodoPageState extends State<TodoPage> {
         // offset: const Offset(0, -96),
         offset: const Offset(0, -146),
         onSelected: _createAddTaskHandler(
-          draftTask: Task.draft(tags: ['緊急']),
+          draftTask: Task.draft(tags: {'緊急'}),
         ),
       ),
     ];
@@ -192,7 +192,7 @@ class _TodoPageState extends State<TodoPage> {
     );
   }
 
-  Widget _searchHeader(List<String> tags, Map<TaskStatusFilter, int> statusCounts) {
+  Widget _searchHeader(Set<String> tags, Map<TaskStatusFilter, int> statusCounts) {
     return TagSearchHeader(
       tags: tags,
       selectedTags: selectedTags,

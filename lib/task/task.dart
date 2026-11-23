@@ -47,7 +47,7 @@ class Task {
   final DateTime endTime;
 
   final bool isAllDay;
-  final List<String> tags;
+  final Set<String> tags;
   final Map<String, String> details;
 
   final TaskStatus status;
@@ -67,14 +67,14 @@ class Task {
     required this.startTime,
     required this.endTime,
     this.isAllDay = false,
-    List<String> tags = const [],
+    Set<String> tags = const {},
     Map<String, String> details = const {},
     this.status = TaskStatus.todo,
     DateTime? createdAt,
     DateTime? updatedAt,
     this.reminderTime,
     this.recurrence,
-  })  : tags = List<String>.unmodifiable(tags),
+  })  : tags = Set<String>.unmodifiable(tags),
         details = Map<String, String>.unmodifiable(details),
         createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now() {
@@ -90,7 +90,7 @@ class Task {
     DateTime? startTime,
     DateTime? endTime,
     bool isAllDay = false,
-    List<String> tags = const [],
+    Set<String> tags = const {},
     Map<String, String> details = const {},
     TaskStatus status = TaskStatus.todo,
     DateTime? createdAt,
@@ -128,7 +128,7 @@ class Task {
     DateTime? startTime,
     DateTime? endTime,
     bool? isAllDay,
-    List<String>? tags,
+    Set<String>? tags,
     Map<String, String>? details,
     TaskStatus? status,
     DateTime? createdAt,
@@ -165,7 +165,7 @@ class Task {
     DateTime? startTime,
     DateTime? endTime,
     bool? isAllDay,
-    List<String>? tags,
+    Set<String>? tags,
     Map<String, String>? details,
     TaskStatus? status,
     DateTime? createdAt,
@@ -240,7 +240,7 @@ class Task {
       'startTime': startTime.toIso8601String(),
       'endTime': endTime.toIso8601String(),
       'isAllDay': isAllDay ? 1 : 0,
-      'tags': jsonEncode(tags),
+      'tags': jsonEncode(tags.toList()),
       'details': jsonEncode(details),
       'status': status.name,
       'createdAt': createdAt.toIso8601String(),
@@ -261,7 +261,7 @@ class Task {
       isAllDay: map['isAllDay'] == 1,
       tags: List<String>.from(
         jsonDecode(map['tags'] as String) as List,
-      ),
+      ).toSet(),
       details: Map<String, String>.from(
         jsonDecode(map['details'] as String) as Map,
       ),

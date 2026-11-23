@@ -12,7 +12,7 @@ class AddTaskPage extends StatefulWidget {
 
   // final bool initialIsAllDay;
   // final List<String> initialTags;
-  final List<String> allTags;
+  final Set<String> allTags;
   final Task? initialTask;
 
   @override
@@ -24,9 +24,9 @@ class _AddTaskPageState extends State<AddTaskPage> {
   late DateTime _startTime;
   late DateTime _endTime;
   late bool _isAllDay;
-  late List<String> _selectedTags;
+  late Set<String> _selectedTags;
   late Task _draftTask;
-  late List<String> _allTags;
+  late Set<String> _allTags;
 
   @override
   void initState() {
@@ -40,7 +40,13 @@ class _AddTaskPageState extends State<AddTaskPage> {
     _startTime = _draftTask.startTime;
     _endTime = _draftTask.endTime;
     _isAllDay = widget.initialTask?.isAllDay ?? false;
-    _selectedTags = widget.initialTask?.tags ?? [];
+    // _selectedTags = widget.initialTask?.tags ?? [];
+    final initialTask = widget.initialTask;
+    if (initialTask != null) {
+      _selectedTags = Set<String>.from(initialTask.tags);
+    } else {
+      _selectedTags = <String>{};
+    }
     _allTags = widget.allTags;
 
     // final now = DateTime.now();

@@ -15,7 +15,7 @@ Future<void> seedTestTasks() async {
     int minute = 0,
     int duration = 60,
     String description = '',
-    List<String> tags = const [],
+    Set<String> tags = const {},
     TaskStatus status = TaskStatus.todo,
     bool allDay = false,
     String? recurrence,
@@ -64,7 +64,7 @@ Future<void> seedTestTasks() async {
     day: -12,
     hour: 20,
     duration: 45,
-    tags: ['university', 'assignment'],
+    tags: {'university', 'assignment'},
     status: TaskStatus.completed,
   );
   await add(
@@ -72,7 +72,7 @@ Future<void> seedTestTasks() async {
     day: -10,
     hour: 17,
     duration: 30,
-    tags: ['shopping'],
+    tags: {'shopping'},
     status: TaskStatus.completed,
   );
   await add(
@@ -80,7 +80,7 @@ Future<void> seedTestTasks() async {
     day: -9,
     hour: 17,
     duration: 240,
-    tags: ['part-time'],
+    tags: {'part-time'},
     status: TaskStatus.completed,
   );
   await add(
@@ -88,7 +88,7 @@ Future<void> seedTestTasks() async {
     day: -8,
     hour: 19,
     duration: 90,
-    tags: ['study', 'network'],
+    tags: {'study', 'network'},
     status: TaskStatus.todo,
   );
   await add(
@@ -96,7 +96,7 @@ Future<void> seedTestTasks() async {
     day: -7,
     hour: 10,
     duration: 60,
-    tags: ['housework'],
+    tags: {'housework'},
     status: TaskStatus.completed,
   );
   await add(
@@ -104,7 +104,7 @@ Future<void> seedTestTasks() async {
     day: -6,
     hour: 18,
     duration: 120,
-    tags: ['private'],
+    tags: {'private'},
     status: TaskStatus.completed,
   );
   await add(
@@ -112,7 +112,7 @@ Future<void> seedTestTasks() async {
     day: -5,
     hour: 21,
     duration: 120,
-    tags: ['university', 'assignment'],
+    tags: {'university', 'assignment'},
     status: TaskStatus.inProgress,
   );
   await add(
@@ -120,7 +120,7 @@ Future<void> seedTestTasks() async {
     day: -4,
     hour: 8,
     duration: 60,
-    tags: ['housework'],
+    tags: {'housework'},
     status: TaskStatus.completed,
   );
   await add(
@@ -128,7 +128,7 @@ Future<void> seedTestTasks() async {
     day: -3,
     hour: 14,
     duration: 60,
-    tags: ['private'],
+    tags: {'private'},
     status: TaskStatus.cancelled,
   );
   await add(
@@ -136,7 +136,7 @@ Future<void> seedTestTasks() async {
     day: -2,
     hour: 20,
     duration: 90,
-    tags: ['study', 'IT'],
+    tags: {'study', 'IT'},
     status: TaskStatus.completed,
   );
 
@@ -148,7 +148,7 @@ Future<void> seedTestTasks() async {
     hour: 8,
     minute: 15,
     duration: 15,
-    tags: ['personal'],
+    tags: {'personal'},
   );
   await add(
     title: '情報ネットワーク入門',
@@ -156,14 +156,14 @@ Future<void> seedTestTasks() async {
     hour: 10,
     minute: 30,
     duration: 90,
-    tags: ['course'],
+    tags: {'course'},
   );
   await add(
     title: '昼食',
     day: 0,
     hour: 12,
     duration: 45,
-    tags: ['private'],
+    tags: {'private'},
     status: TaskStatus.completed,
   );
   await add(
@@ -172,7 +172,7 @@ Future<void> seedTestTasks() async {
     hour: 14,
     minute: 30,
     duration: 45,
-    tags: ['university', 'assignment'],
+    tags: {'university', 'assignment'},
     status: TaskStatus.inProgress,
     reminder: true,
   );
@@ -181,14 +181,14 @@ Future<void> seedTestTasks() async {
     day: 0,
     hour: 17,
     duration: 45,
-    tags: ['shopping'],
+    tags: {'shopping'},
   );
   await add(
     title: 'FlutterのDB処理を確認',
     day: 0,
     hour: 20,
     duration: 90,
-    tags: ['development', 'Flutter'],
+    tags: {'development', 'Flutter'},
     status: TaskStatus.inProgress,
   );
 
@@ -200,7 +200,7 @@ Future<void> seedTestTasks() async {
     hour: 12,
     minute: 50,
     duration: 90,
-    tags: ['course'],
+    tags: {'course'},
     recurrence: 'weekly',
   );
   await add(
@@ -208,7 +208,7 @@ Future<void> seedTestTasks() async {
     day: 1,
     hour: 16,
     duration: 60,
-    tags: ['university', 'assignment'],
+    tags: {'university', 'assignment'},
     reminder: true,
   );
   await add(
@@ -216,14 +216,14 @@ Future<void> seedTestTasks() async {
     day: 2,
     hour: 17,
     duration: 240,
-    tags: ['part-time'],
+    tags: {'part-time'},
   );
   await add(
     title: 'Flutterの画面レイアウト改善',
     day: 2,
     hour: 20,
     duration: 120,
-    tags: ['development', 'Flutter'],
+    tags: {'development', 'Flutter'},
   );
   await add(
     title: '社会学',
@@ -231,7 +231,7 @@ Future<void> seedTestTasks() async {
     hour: 10,
     minute: 30,
     duration: 90,
-    tags: ['course'],
+    tags: {'course'},
     recurrence: 'weekly',
   );
   await add(
@@ -239,28 +239,28 @@ Future<void> seedTestTasks() async {
     day: 3,
     hour: 14,
     duration: 60,
-    tags: ['university', 'study'],
+    tags: {'university', 'study'},
   );
   await add(
     title: '部屋の片付け',
     day: 4,
     hour: 9,
     duration: 90,
-    tags: ['housework'],
+    tags: {'housework'},
   );
   await add(
     title: '友人と遊ぶ',
     day: 4,
     hour: 13,
     duration: 180,
-    tags: ['private'],
+    tags: {'private'},
   );
   await add(
     title: 'ネットワークの問題演習',
     day: 5,
     hour: 10,
     duration: 120,
-    tags: ['study', 'network'],
+    tags: {'study', 'network'},
     reminder: true,
   );
   await add(
@@ -268,21 +268,21 @@ Future<void> seedTestTasks() async {
     day: 5,
     hour: 15,
     duration: 45,
-    tags: ['shopping'],
+    tags: {'shopping'},
   );
   await add(
     title: '個人開発の進捗整理',
     day: 6,
     hour: 19,
     duration: 60,
-    tags: ['development'],
+    tags: {'development'},
   );
   await add(
     title: '来週の予定を整理',
     day: 7,
     hour: 20,
     duration: 30,
-    tags: ['personal'],
+    tags: {'personal'},
   );
 
   // ── 終日予定・締め切り ──
@@ -291,26 +291,26 @@ Future<void> seedTestTasks() async {
     title: 'レポート提出期限',
     day: 8,
     allDay: true,
-    tags: ['university', 'deadline'],
+    tags: {'university', 'deadline'},
     reminder: true,
   );
   await add(
     title: '学費の支払いを確認',
     day: 9,
     allDay: true,
-    tags: ['administration', 'deadline'],
+    tags: {'administration', 'deadline'},
   );
   await add(
     title: '大学の休講日',
     day: 10,
     allDay: true,
-    tags: ['university'],
+    tags: {'university'},
   );
   await add(
     title: '資格試験の申し込み',
     day: 12,
     allDay: true,
-    tags: ['study', 'deadline'],
+    tags: {'study', 'deadline'},
   );
   await add(
     title: '歯科の予約',
@@ -318,7 +318,7 @@ Future<void> seedTestTasks() async {
     hour: 11,
     minute: 30,
     duration: 30,
-    tags: ['appointment'],
+    tags: {'appointment'},
     reminder: true,
   );
   await add(
@@ -326,26 +326,26 @@ Future<void> seedTestTasks() async {
     day: 15,
     hour: 13,
     duration: 60,
-    tags: ['development', 'meeting'],
+    tags: {'development', 'meeting'},
   );
   await add(
     title: '友人の誕生日',
     day: 18,
     allDay: true,
-    tags: ['private', 'event'],
+    tags: {'private', 'event'},
   );
   await add(
     title: '定期券の更新',
     day: 21,
     allDay: true,
-    tags: ['administration'],
+    tags: {'administration'},
   );
   await add(
     title: 'レポートの最終確認',
     day: 24,
     hour: 19,
     duration: 120,
-    tags: ['university', 'assignment'],
+    tags: {'university', 'assignment'},
     reminder: true,
   );
   await add(
@@ -353,14 +353,14 @@ Future<void> seedTestTasks() async {
     day: 28,
     hour: 10,
     duration: 180,
-    tags: ['housework'],
+    tags: {'housework'},
   );
   await add(
     title: '来月の予定を計画',
     day: 30,
     hour: 20,
     duration: 45,
-    tags: ['personal'],
+    tags: {'personal'},
   );
 
   print('テストタスクの登録完了');

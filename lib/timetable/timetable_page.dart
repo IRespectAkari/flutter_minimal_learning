@@ -148,7 +148,7 @@ class _TimetablePageState extends State<TimetablePage> {
         time[2],
         time[3],
       ),
-      tags: ['course'],
+      tags: {'course'},
       details: {
         'weekday': (day + 1).toString(),
         'period': (period + 1).toString(),

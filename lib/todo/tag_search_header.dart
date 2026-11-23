@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
 
 class TagSearchHeader extends StatefulWidget {
-  final List<String> tags;
+  final Set<String> tags;
   final Set<String> selectedTags;
   final TaskStatusFilter selectedState;
   final Map<TaskStatusFilter, int> statusCounts;
