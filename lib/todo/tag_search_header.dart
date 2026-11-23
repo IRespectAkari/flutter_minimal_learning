@@ -340,6 +340,7 @@ class _TagSearchHeaderState extends State<TagSearchHeader> {
           final count = statusCounts[filter];
           return Tab(
             text: '${filter.label} ($count)',
+            height: 35,
           );
         }).toList(),
       ),
