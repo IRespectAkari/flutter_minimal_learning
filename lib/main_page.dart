@@ -20,29 +20,16 @@ class MainPage extends StatefulWidget {
 }
 
 enum AppPage {
-  calendar,
-  weekSchedule,
-  timetable,
-  todo,
-  // settings,
-}
-extension AppPageInfo on AppPage {
-  String get title => switch (this) {
-    AppPage.timetable => '時間割',
-    AppPage.weekSchedule => '週間スケジュール',
-    AppPage.todo => 'タスク一覧',
-    // AppPage.settings => '設定',
-    AppPage.calendar => 'カレンダー',
-  };
+  calendar("カレンダー", Icons.calendar_month),
+  weekSchedule("週間スケジュール", Icons.calendar_view_week),
+  timetable("時間割", Icons.grid_view),
+  todo("タスク", Icons.checklist);
+  // settings("設定", Icons.settings);
 
-  IconData get icon => switch (this) {
-    AppPage.timetable => Icons.grid_view,
-    // AppPage.timetable => Icons.table_view,
-    AppPage.weekSchedule => Icons.calendar_view_week,
-    AppPage.todo => Icons.checklist,
-    // AppPage.settings => Icons.settings,
-    AppPage.calendar => Icons.calendar_month,
-  };
+  final String title;
+  final IconData icon;
+
+  const AppPage(this.title, this.icon);
 }
 
 class _MainPageState extends State<MainPage> {
