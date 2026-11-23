@@ -109,10 +109,14 @@ class _TimetablePageState extends State<TimetablePage> {
 
     // 既存講義があれば名称を更新
     if (existingTask != null) {
-      existingTask.title = title;
-      existingTask.updatedAt = DateTime.now();
+      // existingTask.title = title;
+      // existingTask.updatedAt = DateTime.now();
+      final newTask = existingTask.copyWith(
+        title: title,
+        updatedAt: DateTime.now(),
+      );
 
-      await widget.onTaskUpdated(existingTask);
+      await widget.onTaskUpdated(newTask);
       return;
     }
 
@@ -127,8 +131,8 @@ class _TimetablePageState extends State<TimetablePage> {
 
     final time = periodTimes[period];
 
-    final task = Task(
-      id: 'course_${now.microsecondsSinceEpoch}',
+    final task = Task.draft(
+      // id: 'course_${now.microsecondsSinceEpoch}',
       title: title,
       startTime: DateTime(
         date.year,

@@ -77,18 +77,7 @@ class _TodoPageState extends State<TodoPage> {
       ),
 
       floatingActionButton: RadialActionButton(
-        onTap: (context) async {
-          final task = await Navigator.push<Task>(
-            context,
-            MaterialPageRoute(builder: (_) => const AddTaskPage()),
-          );
-
-          if (task == null || task.title.trim().isEmpty) {
-            return;
-          }
-
-          await widget.onTaskAdded(task);
-        },
+        onTap: _createAddTaskHandler(),
 
         actions: [
           // 左：終日タスク
@@ -98,7 +87,8 @@ class _TodoPageState extends State<TodoPage> {
             // offset: const Offset(-96, 0),
             offset: const Offset(-146, 0),
             onSelected: _createAddTaskHandler(
-              initialIsAllDay: true,
+              // initialIsAllDay: true,
+              draftTask: Task.draft(isAllDay: true),
             ),
           ),
 
@@ -109,7 +99,8 @@ class _TodoPageState extends State<TodoPage> {
             // offset: const Offset(-68, -68),
             offset: const Offset(-103, -103),
             onSelected: _createAddTaskHandler(
-              initialTags: ['課題'],
+              // initialTags: ['課題'],
+              draftTask: Task.draft(tags: ['課題']),
             ),
           ),
 
@@ -120,7 +111,8 @@ class _TodoPageState extends State<TodoPage> {
             // offset: const Offset(0, -96),
             offset: const Offset(0, -146),
             onSelected: _createAddTaskHandler(
-              initialTags: ['緊急'],
+              // initialTags: ['緊急'],
+              draftTask: Task.draft(tags: ['緊急']),
             ),
           ),
         ],
@@ -166,11 +158,11 @@ class _TodoPageState extends State<TodoPage> {
             onToggle: (index) async {
               final task = filteredTasks[index];
 
-              task.update(
+              final updatedTask = task.copyWith(
                 status: task.isCompleted ? TaskStatus.todo : TaskStatus.completed,
               );
 
-              await widget.onTaskUpdated(task);
+              await widget.onTaskUpdated(updatedTask);
             },
 
             // 削除
@@ -232,16 +224,19 @@ class _TodoPageState extends State<TodoPage> {
   }
 
   Future<void> Function(BuildContext) _createAddTaskHandler({
-    bool initialIsAllDay = false,
-    List<String> initialTags = const [],
+    // bool initialIsAllDay = false,
+    // List<String> initialTags = const [],
+    Task? draftTask
   }) {
     return (context) async {
       final task = await Navigator.push<Task>(
         context,
         MaterialPageRoute(
           builder: (_) => AddTaskPage(
-            initialIsAllDay: initialIsAllDay,
-            initialTags: initialTags,
+            // initialIsAllDay: initialIsAllDay,
+            // initialTags: initialTags,
+            allTags: widget.tags,
+            initialTask: draftTask,
           ),
         ),
       );

@@ -4,12 +4,16 @@ import 'package:flutter_minimal_learning/task/task.dart';
 class AddTaskPage extends StatefulWidget {
   const AddTaskPage({
     super.key,
-    this.initialIsAllDay = false,
-    this.initialTags = const [],
+    // this.initialIsAllDay = false,
+    // this.initialTags = const [],
+    required this.allTags,
+    this.initialTask,
   });
 
-  final bool initialIsAllDay;
-  final List<String> initialTags;
+  // final bool initialIsAllDay;
+  // final List<String> initialTags;
+  final List<String> allTags;
+  final Task? initialTask;
 
   @override
   State<AddTaskPage> createState() => _AddTaskPageState();
@@ -20,23 +24,36 @@ class _AddTaskPageState extends State<AddTaskPage> {
   late DateTime _startTime;
   late DateTime _endTime;
   late bool _isAllDay;
-  late List<String> _tags;
+  late List<String> _selectedTags;
+  late Task _draftTask;
+  late List<String> _allTags;
 
   @override
   void initState() {
     super.initState();
 
-    final now = DateTime.now();
-    _startTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute,
-    );
-    _endTime = _startTime.add(const Duration(hours: 1));
-    _isAllDay = widget.initialIsAllDay;
-    _tags = widget.initialTags;
+    // 初期Taskを取得
+    _draftTask = widget.initialTask?.copyWith() ?? Task.draft();
+
+    // Taskからフォームの初期値を取得
+    controller.text = _draftTask.title;
+    _startTime = _draftTask.startTime;
+    _endTime = _draftTask.endTime;
+    _isAllDay = widget.initialTask?.isAllDay ?? false;
+    _selectedTags = widget.initialTask?.tags ?? [];
+    _allTags = widget.allTags;
+
+    // final now = DateTime.now();
+    // _startTime = DateTime(
+    //   now.year,
+    //   now.month,
+    //   now.day,
+    //   now.hour,
+    //   now.minute,
+    // );
+    // _endTime = _startTime.add(const Duration(hours: 1));
+    // _isAllDay = widget.initialIsAllDay;
+    // _tags = widget.initialTags;
   }
 
   Future<DateTime?> _pickDateTime(DateTime initial) async {
@@ -67,7 +84,6 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       appBar: AppBar(title: const Text('タスクを追加')),
       body: Padding(
@@ -141,12 +157,12 @@ class _AddTaskPageState extends State<AddTaskPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  final task = Task(
-                    id: DateTime.now().microsecondsSinceEpoch.toString(),
+                  final task = _draftTask.copyWith(
                     title: controller.text,
                     startTime: _startTime,
                     endTime: _endTime,
                     isAllDay: _isAllDay,
+                    tags: _selectedTags,
                   );
 
                   Navigator.pop<Task>(context, task);

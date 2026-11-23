@@ -25,7 +25,7 @@ DateTime classDate(int weekday, int hour, int minute) {
 }
 
 Task createCourseTask({
-  required String id,
+  // required String id,
   required int weekday,
   required int period,
   required String title,
@@ -35,8 +35,8 @@ Task createCourseTask({
 }) {
   final time = periodTimes[period - 1];
 
-  return Task(
-    id: id,
+  return Task.draft(
+    // id: id,
     title: title,
     description: memo,
     startTime: classDate(weekday, time[0], time[1]),
@@ -54,7 +54,7 @@ Task createCourseTask({
 
 final List<Task> initialTasks = [
   createCourseTask(
-    id: 'course-mon-3',
+    // id: 'course-mon-3',
     weekday: 1,
     period: 3,
     title: '消費者行動論',
@@ -63,7 +63,7 @@ final List<Task> initialTasks = [
     memo: '消費者心理と購買行動について学ぶ・資料配布あり',
   ),
   createCourseTask(
-    id: 'course-mon-4',
+    // id: 'course-mon-4',
     weekday: 1,
     period: 4,
     title: '社会学',
@@ -72,7 +72,7 @@ final List<Task> initialTasks = [
     memo: '社会構造と現代社会の課題を扱う・出席重視',
   ),
   createCourseTask(
-    id: 'course-tue-2',
+    // id: 'course-tue-2',
     weekday: 2,
     period: 2,
     title: '宗教学',
@@ -81,7 +81,7 @@ final List<Task> initialTasks = [
     memo: '宗教の基礎概念と社会との関係を学ぶ・小レポートあり',
   ),
   createCourseTask(
-    id: 'course-tue-3',
+    // id: 'course-tue-3',
     weekday: 2,
     period: 3,
     title: '情報リテラシー演習２',
@@ -90,7 +90,7 @@ final List<Task> initialTasks = [
     memo: 'Officeソフトを使った実習中心・課題提出あり',
   ),
   createCourseTask(
-    id: 'course-wed-1',
+    // id: 'course-wed-1',
     weekday: 3,
     period: 1,
     title: 'キャリアデザイン2',
@@ -99,7 +99,7 @@ final List<Task> initialTasks = [
     memo: '就職活動やキャリア形成について考える・自己分析課題あり',
   ),
   createCourseTask(
-    id: 'course-wed-2',
+    // id: 'course-wed-2',
     weekday: 3,
     period: 2,
     title: '情報ネットワーク入門',
@@ -108,7 +108,7 @@ final List<Task> initialTasks = [
     memo: 'ネットワークの基礎と通信の仕組みを学ぶ・実習あり',
   ),
   createCourseTask(
-    id: 'course-wed-4',
+    // id: 'course-wed-4',
     weekday: 3,
     period: 4,
     title: '情報数学１',
@@ -117,7 +117,7 @@ final List<Task> initialTasks = [
     memo: '集合と論理・確率など情報系の基礎数学を扱う・小テストあり',
   ),
   createCourseTask(
-    id: 'course-wed-5',
+    // id: 'course-wed-5',
     weekday: 3,
     period: 5,
     title: 'インターンシップ実習',
@@ -126,7 +126,7 @@ final List<Task> initialTasks = [
     memo: 'インターンシップに向けた事前指導・活動報告書の提出あり',
   ),
   createCourseTask(
-    id: 'course-thu-2',
+    // id: 'course-thu-2',
     weekday: 4,
     period: 2,
     title: 'プレゼミ2（競プロ）',
@@ -135,7 +135,7 @@ final List<Task> initialTasks = [
     memo: 'プログラミングコンテスト形式の演習・C++推奨',
   ),
   createCourseTask(
-    id: 'course-thu-5',
+    // id: 'course-thu-5',
     weekday: 4,
     period: 5,
     title: 'Webデザイン',
@@ -144,7 +144,7 @@ final List<Task> initialTasks = [
     memo: 'HTMLとCSSを使ったWeb制作・制作課題あり',
   ),
   createCourseTask(
-    id: 'course-fri-1',
+    // id: 'course-fri-1',
     weekday: 5,
     period: 1,
     title: 'プログラミング初歩Ⅱ',
@@ -153,7 +153,7 @@ final List<Task> initialTasks = [
     memo: 'プログラミングの基礎から応用演習まで扱う・課題提出あり',
   ),
   createCourseTask(
-    id: 'course-fri-3',
+    // id: 'course-fri-3',
     weekday: 5,
     period: 3,
     title: '情報倫理',
@@ -163,8 +163,8 @@ final List<Task> initialTasks = [
   ),
   // 以下は講義以外のテストデータ
   // 月曜日
-  Task(
-    id: 'event-mon-lunch',
+  Task.draft(
+    // id: 'event-mon-lunch',
     title: '友人と昼食',
     description: '学食で友人と昼食をとる',
     startTime: DateTime(2026, 10, 12, 12, 0),
@@ -172,8 +172,8 @@ final List<Task> initialTasks = [
     tags: ['event', 'private'],
     recurrence: 'weekly',
   ),
-  Task(
-    id: 'event-mon-study',
+  Task.draft(
+    // id: 'event-mon-study',
     title: '課題に取り組む',
     description: 'プログラミングの課題を進める',
     startTime: DateTime(2026, 10, 12, 10, 30),
@@ -183,8 +183,8 @@ final List<Task> initialTasks = [
   ),
 
   // 火曜日
-  Task(
-    id: 'event-tue-library',
+  Task.draft(
+    // id: 'event-tue-library',
     title: '図書館で勉強',
     description: '次回の講義の予習と資料の整理',
     startTime: DateTime(2026, 10, 13, 14, 20),
@@ -192,8 +192,8 @@ final List<Task> initialTasks = [
     tags: ['event', 'study'],
     recurrence: 'weekly',
   ),
-  Task(
-    id: 'event-tue-shopping',
+  Task.draft(
+    // id: 'event-tue-shopping',
     title: '日用品の買い物',
     description: '帰宅前に必要な日用品を購入する',
     startTime: DateTime(2026, 10, 13, 16, 0),
@@ -203,8 +203,8 @@ final List<Task> initialTasks = [
   ),
 
   // 水曜日
-  Task(
-    id: 'event-wed-break',
+  Task.draft(
+    // id: 'event-wed-break',
     title: 'カフェで休憩',
     description: '講義の合間に飲み物を買って休憩する',
     startTime: DateTime(2026, 10, 14, 12, 0),
@@ -212,8 +212,8 @@ final List<Task> initialTasks = [
     tags: ['event', 'private'],
     recurrence: 'weekly',
   ),
-  Task(
-    id: 'event-wed-teacher',
+  Task.draft(
+    // id: 'event-wed-teacher',
     title: '先生に質問',
     description: '講義で分からなかった内容を確認する',
     startTime: DateTime(2026, 10, 14, 13, 50),
@@ -223,8 +223,8 @@ final List<Task> initialTasks = [
   ),
 
   // 木曜日
-  Task(
-    id: 'event-thu-lunch',
+  Task.draft(
+    // id: 'event-thu-lunch',
     title: '昼食',
     description: '空き時間に昼食をとる',
     startTime: DateTime(2026, 10, 15, 12, 0),
@@ -232,8 +232,8 @@ final List<Task> initialTasks = [
     tags: ['event', 'private'],
     recurrence: 'weekly',
   ),
-  Task(
-    id: 'event-thu-club',
+  Task.draft(
+    // id: 'event-thu-club',
     title: 'プログラミングサークル',
     description: 'メンバーと競技プログラミングの問題を解く',
     startTime: DateTime(2026, 10, 15, 14, 0),
@@ -243,8 +243,8 @@ final List<Task> initialTasks = [
   ),
 
   // 金曜日
-  Task(
-    id: 'event-fri-review',
+  Task.draft(
+    // id: 'event-fri-review',
     title: '今週の振り返り',
     description: '課題の残りと来週の予定を整理する',
     startTime: DateTime(2026, 10, 16, 14, 40),
@@ -252,8 +252,8 @@ final List<Task> initialTasks = [
     tags: ['event', 'study'],
     recurrence: 'weekly',
   ),
-  Task(
-    id: 'event-fri-parttime',
+  Task.draft(
+    // id: 'event-fri-parttime',
     title: 'アルバイト',
     description: '飲食店でのアルバイト',
     startTime: DateTime(2026, 10, 16, 16, 30),

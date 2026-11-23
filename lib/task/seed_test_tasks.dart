@@ -37,8 +37,8 @@ Future<void> seedTestTasks() async {
       Duration(days: (day.abs() % 14) + 1),
     );
 
-    final task = Task(
-      id: 'test_${now.microsecondsSinceEpoch}_${idCounter++}',
+    final task = Task.draft(
+      // id: 'test_${now.microsecondsSinceEpoch}_${idCounter++}',
       title: title,
       description: description,
       startTime: start,
