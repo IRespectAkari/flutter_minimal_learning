@@ -157,6 +157,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
                 ),
               // ],
 
+              Text("タグ一覧"),
               _tags(),
 
               const SizedBox(height: 16),
@@ -192,6 +193,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   Widget _buildTag(String label, String? value) {
     var tag = (
       color: Color(0xFFF8E8E7),
+      selectedColor: Color(0xFFFF91CA),
       label: label,
       value: value,
     );
@@ -205,13 +207,21 @@ class _AddTaskPageState extends State<AddTaskPage> {
     return FilterChip(
       label: Text(tag.label),
       selected: selected,
-      onSelected: (_) => _selectedTags.add(tag.label),
+      onSelected: (isSelected) {
+        setState(() {
+          if(isSelected) {
+            _selectedTags.add(tag.label);
+          }else {
+            _selectedTags.remove(tag.label);
+          }
+        });
+      },
       visualDensity: VisualDensity.compact,
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       padding: const EdgeInsets.fromLTRB(1, 4, 1, 4),
       showCheckmark: false, // チェックマークを消す
       backgroundColor: tag.color,
-      selectedColor: Colors.lightBlueAccent,
+      selectedColor: tag.selectedColor,
     );
   }
 }
