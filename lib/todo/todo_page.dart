@@ -77,18 +77,19 @@ class _TodoPageState extends State<TodoPage> {
         // offset: const Offset(-68, -68),
         offset: const Offset(-103, -103),
         onSelected: _createAddTaskHandler(
-          draftTask: Task.draft(tags: {'課題'}),
+          draftTask: Task.draft(tags: {'study'}),
         ),
       ),
 
       // 上：緊急タグ付きタスク
       RadialAction(
-        label: '緊急',
-        icon: Icons.priority_high,
+        label: '仕事',
+        // icon: Icons.priority_high,
+        icon: Icons.work,
         // offset: const Offset(0, -96),
         offset: const Offset(0, -146),
         onSelected: _createAddTaskHandler(
-          draftTask: Task.draft(tags: {'緊急'}),
+          draftTask: Task.draft(tags: {'work'}),
         ),
       ),
     ];
