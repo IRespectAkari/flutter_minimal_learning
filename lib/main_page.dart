@@ -36,6 +36,32 @@ enum AppPage {
 }
 
 class _MainPageState extends State<MainPage> {
+  final PageController _pageController = PageController();
+  int _currentIndex = 0;
+  bool _isAnimatingByTap = false;
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  // BottomNavigationBarタップ時の処理
+  Future<void> _onBottomNavTapped(int index) async {
+    setState(() {
+      _currentIndex = index;
+      _isAnimatingByTap = true;
+    });
+
+    await _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutSine,
+    );
+
+    _isAnimatingByTap = false;
+  }
+
   AppPage _selectedPage = AppPage.calendar;
 
   final Set<String> _defaultTags = const {
@@ -203,6 +229,7 @@ class _MainPageState extends State<MainPage> {
       AppPage.todo => TodoPage(
           tasks: _tasks,
           tags: _tags,
+          mainPageController: _pageController,
           onTaskAdded: _addTask,
           onTaskUpdated: _updateTask,
           onTaskDeleted: _deleteTask,
@@ -309,23 +336,49 @@ class _MainPageState extends State<MainPage> {
         ),
       ),
 
-      body: buildPage(_selectedPage),
-      resizeToAvoidBottomInset: false,
+      // 画面端からスワイプでドロワーが開く幅（論理ピクセル）
+      // 35～50程度がスマホでの0.5～1cmに相当
+      // drawerEdgeDragWidth: 40.0,
+
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          if (!_isAnimatingByTap) {
+            setState(() {
+              _currentIndex = index;
+            });
+          }
+        },
+        children: AppPage.values.map((page) => buildPage(page)).toList(),
+      ),
+
+      // 下部のナビゲーションバー
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _onBottomNavTapped,
+        items: AppPage.values.map((page) =>
+          BottomNavigationBarItem(icon: Icon(page.icon), label: page.title)
+        ).toList(),
+      ),
+
+
+      // body: buildPage(_selectedPage),
+      // resizeToAvoidBottomInset: false,
+
+      // bottomNavigationBar: BottomNavigationBar(
+      //   currentIndex: _selectedPage.index,
+      //   onTap: (index) => setState((){ _selectedPage = AppPage.values[index]; }),
+      //   items: AppPage.values.map((page) {
+      //     return BottomNavigationBarItem(
+      //       icon: Icon(page.icon),
+      //       label: page.title,
+      //     );
+      //   }).toList(),
+      //
+      //   selectedItemColor: Colors.blue,
+      // ),
 
       backgroundColor: Colors.blueGrey,
-
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedPage.index,
-        onTap: (index) => setState((){ _selectedPage = AppPage.values[index]; }),
-        items: AppPage.values.map((page) {
-          return BottomNavigationBarItem(
-            icon: Icon(page.icon),
-            label: page.title,
-          );
-        }).toList(),
-
-        selectedItemColor: Colors.blue,
-      ),
 
       floatingActionButton: (_selectedPage == AppPage.weekSchedule) ?
         null : RadialActionButton(
