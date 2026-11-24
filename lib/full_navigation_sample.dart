@@ -58,7 +58,7 @@ class _FullNavigationSampleState extends State<FullNavigationSample> {
         children: [
           _buildSimplePage('ページA', Colors.blue.shade50),
           _buildSimplePage('ページB', Colors.green.shade50),
-          _buildPageCWithTabs(), // タブを持つページC
+          _buildPageCWithTabs(_pageController), // タブを持つページC
         ],
       ),
 
@@ -87,7 +87,7 @@ class _FullNavigationSampleState extends State<FullNavigationSample> {
   }
 
   // 内部にTabBarViewを持つページC
-  Widget _buildPageCWithTabs() {
+  Widget _buildPageCWithTabs(PageController _mainpageController) {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -105,7 +105,7 @@ class _FullNavigationSampleState extends State<FullNavigationSample> {
           onNotification: (notification) {
             // タブA表示中にさらに右へスワイプ（左方向への移動要求）されたらページBへ
             if (notification.overscroll < 0) {
-              _pageController.previousPage(
+              _mainpageController.previousPage(
                 duration: const Duration(milliseconds: 300),
                 curve: Curves.easeOut,
               );
