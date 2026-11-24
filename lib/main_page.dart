@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_minimal_learning/radialAction/radial_action.dart';
+import 'package:flutter_minimal_learning/radialAction/radial_action_button.dart';
 
 import 'package:flutter_minimal_learning/task/task.dart';
 import 'package:flutter_minimal_learning/task/task_data.dart';
 import 'package:flutter_minimal_learning/task/task_database.dart';
+import 'package:flutter_minimal_learning/todo/add_task_page.dart';
 
 import 'package:flutter_minimal_learning/todo/todo_page.dart';
 
@@ -49,6 +52,7 @@ class _MainPageState extends State<MainPage> {
   List<Task> _tasks = [];
   Set<String> _tags = {};
   bool _isLoading = true;
+  List<RadialAction> _radialActionsList = [];
   String? _error;
 
   List<String> _dropdownList = [];
@@ -58,11 +62,11 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-    _loadTasks();
+    _loadByDatabase();
   }
 
   // SQLiteを初期化し、タスクを読み込む
-  Future<void> _loadTasks() async {
+  Future<void> _loadByDatabase() async {
     try {
       final database = TaskDatabase.instance;
 
@@ -80,6 +84,41 @@ class _MainPageState extends State<MainPage> {
         _dropdownList = _defaultDropdownlist;
         _selectedTerm = _dropdownList[0];
         _isLoading = false;
+        _radialActionsList = [
+          // 左：終日タスク
+          RadialAction(
+            label: "終日",
+            icon: Icons.today,
+            // offset: const Offset(-96, 0),
+            offset: const Offset(-146, 0),
+            onSelected: _createAddTaskHandler(
+              draftTask: Task.draft(isAllDay: true),
+            ),
+          ),
+
+          // 左上：課題タグ付きタスク
+          RadialAction(
+            label: '課題',
+            icon: Icons.assignment_outlined,
+            // offset: const Offset(-68, -68),
+            offset: const Offset(-103, -103),
+            onSelected: _createAddTaskHandler(
+              draftTask: Task.draft(tags: {'study'}),
+            ),
+          ),
+
+          // 上：緊急タグ付きタスク
+          RadialAction(
+            label: '仕事',
+            // icon: Icons.priority_high,
+            icon: Icons.work,
+            // offset: const Offset(0, -96),
+            offset: const Offset(0, -146),
+            onSelected: _createAddTaskHandler(
+              draftTask: Task.draft(tags: {'work'}),
+            ),
+          ),
+        ];
       });
     } catch (e) {
       if (!mounted) return;
@@ -183,6 +222,25 @@ class _MainPageState extends State<MainPage> {
     };
   }
 
+  Future<void> Function(BuildContext) _createAddTaskHandler({Task? draftTask}) {
+    return (context) async {
+      final task = await Navigator.push<Task>(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AddTaskPage(
+            allTags: _tags,
+            initialTask: draftTask,
+          ),
+        ),
+      );
+
+      if (task == null || task.title.trim().isEmpty) {
+        return;
+      }
+
+      await _addTask(task);
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -268,6 +326,12 @@ class _MainPageState extends State<MainPage> {
 
         selectedItemColor: Colors.blue,
       ),
+
+      floatingActionButton: (_selectedPage == AppPage.weekSchedule) ?
+        null : RadialActionButton(
+                 onTap: _createAddTaskHandler(),
+                 actions: _radialActionsList,
+               ),
     );
   }
 }
