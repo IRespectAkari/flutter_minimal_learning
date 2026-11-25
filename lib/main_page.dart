@@ -229,7 +229,7 @@ class _MainPageState extends State<MainPage> {
       AppPage.todo => TodoPage(
           tasks: _tasks,
           tags: _tags,
-          mainPageController: _pageController,
+          // mainPageController: _pageController,
           onTaskAdded: _addTask,
           onTaskUpdated: _updateTask,
           onTaskDeleted: _deleteTask,
