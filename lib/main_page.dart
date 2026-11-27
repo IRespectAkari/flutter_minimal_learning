@@ -85,6 +85,7 @@ class _MainPageState extends State<MainPage> {
   List<String> _dropdownList = [];
   // late String _selectedTerm = _dropdownList[0];
   late String _selectedTerm = "";
+  late DateTime _displayedMonth;// MainPage側に年月を保持する変数
 
   @override
   void initState() {
@@ -111,6 +112,8 @@ class _MainPageState extends State<MainPage> {
         _dropdownList = _defaultDropdownlist;
         _selectedTerm = _dropdownList[0];
         _isLoading = false;
+        final now = DateTime.now();
+        _displayedMonth = DateTime(now.year, now.month);
         _radialActionsList = [
           // 左：終日タスク
           RadialAction(
@@ -242,6 +245,18 @@ class _MainPageState extends State<MainPage> {
     return inserted;
   }
 
+  // 年月を受け取るメソッド
+  void _onDisplayedMonthChanged(DateTime month) {
+    if (_displayedMonth.year == month.year &&
+        _displayedMonth.month == month.month) {
+      return;
+    }
+
+    setState(() {
+      _displayedMonth = month;
+    });
+  }
+
   // 時間割の上部ドロップダウンメニューの自動生成関数
   List<DropdownMenuItem<String>> createDropdownItems(List<String> values) {
     return values.map((value) => DropdownMenuItem<String>(
@@ -269,6 +284,8 @@ class _MainPageState extends State<MainPage> {
           },
         ),
 
+      AppPage.calendar => Text('${_displayedMonth.year}年${_displayedMonth.month}月',),
+
       _ => Text(selectedPage.title)
     };
   }
@@ -294,7 +311,10 @@ class _MainPageState extends State<MainPage> {
         ),
 
       // AppPage.settings => Timetable2Page(tasks: _tasks),
-      AppPage.calendar => CalendarPage(tasks: _tasks),
+      AppPage.calendar => CalendarPage(
+        tasks: _tasks,
+        onDisplayedMonthChanged: _onDisplayedMonthChanged,
+      ),
     };
   }
 

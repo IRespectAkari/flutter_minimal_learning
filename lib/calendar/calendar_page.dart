@@ -7,10 +7,12 @@ import 'package:flutter_minimal_learning/calendar/calendar_month_data.dart';
 
 class CalendarPage extends StatefulWidget {
   final List<Task> tasks;
+  final ValueChanged<DateTime>? onDisplayedMonthChanged;
 
   const CalendarPage({
     super.key,
     required this.tasks,
+    this.onDisplayedMonthChanged,
   });
 
   @override
@@ -23,7 +25,10 @@ class _CalendarPageState extends State<CalendarPage> {
 
   late final DateTime _baseSunday;
   late final ScrollController _scrollController;
-  late DateTime _displayedMonth;
+  late DateTime _displayedMonth;// 表示中の年月を保持する変数
+
+  // Stateに最後に通知した年月を保持
+  DateTime? _lastReportedMonth;
 
   static const _weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -167,19 +172,22 @@ class _CalendarPageState extends State<CalendarPage> {
     ..sort((a, b) => a.startTime.compareTo(b.startTime));
   }
 
+  // 年月を更新するメソッド
   void _updateDisplayedMonth() {
     if (!_scrollController.hasClients) return;
 
     final position = _scrollController.position;
 
-    // ビューポートの中央に位置するスクロール座標
+    // 画面中央のスクロール座標
     final centerOffset =
         position.pixels + position.viewportDimension / 2;
 
-    // 画面中央に表示されている週のインデックス
+    // itemExtent が _cellHeight なので、スクロール位置をセルの高さで割れば、画面中央にある週のインデックスを求められます。
+    // さらに、既存の _buildWeek() と同じ方法で週の開始日を取得できます。
+
+    // 画面中央にある週のインデックス
     final weekIndex = (centerOffset / _cellHeight).floor();
 
-    // ListViewのインデックスから週の開始日を取得
     final weekOffset = weekIndex - _baseIndex;
 
     final weekStart = CalendarMonthData.weekStartAt(
@@ -187,18 +195,24 @@ class _CalendarPageState extends State<CalendarPage> {
       weekOffset,
     );
 
-    // 日曜始まりの週の中央（水曜日）を基準にする
+    // 週の中央（水曜日）を基準に年月を判定
     final centerDate = weekStart.add(const Duration(days: 3));
 
-    final newMonth = DateTime(centerDate.year, centerDate.month);
+    final newMonth = DateTime(
+      centerDate.year,
+      centerDate.month,
+    );
 
-    // 年月が変わった場合だけ再描画する
-    if (_displayedMonth.year != newMonth.year ||
-        _displayedMonth.month != newMonth.month) {
-      setState(() {
-        _displayedMonth = newMonth;
-      });
+    // 前回と同じ年月なら通知しない
+    if (_lastReportedMonth?.year == newMonth.year &&
+        _lastReportedMonth?.month == newMonth.month) {
+      return;
     }
+
+    _lastReportedMonth = newMonth;
+
+    // MainPageに年月を通知
+    widget.onDisplayedMonthChanged?.call(newMonth);
   }
 
   Widget _buildMonthHeader() {
@@ -222,7 +236,6 @@ class _CalendarPageState extends State<CalendarPage> {
         right: false,
         child: Column(
           children: [
-            _buildMonthHeader(),
             _buildWeekdayHeader(),
             Expanded(
               child: ListView.builder(
