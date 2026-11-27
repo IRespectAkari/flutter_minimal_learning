@@ -85,7 +85,7 @@ class Task {
 
   factory Task.draft({
     // String id = "0000-draft-id",
-    String title = "xxxx-draft-title",
+    String title = "",
     String description = '',
     DateTime? startTime,
     DateTime? endTime,
