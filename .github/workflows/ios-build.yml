@@ -33,6 +33,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # コンパイルエラーと静的エラーをbuild前に検出
+      - name: Analyze code
+        run: flutter analyze
+
       # iOSアプリを署名なしでビルド
       - name: Build iOS
         run: flutter build ios --release --no-codesign
