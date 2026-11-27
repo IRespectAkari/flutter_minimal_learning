@@ -137,24 +137,23 @@ class _AddTaskPageState extends State<AddTaskPage> {
                   }
                 },
               ),
-              if (!_isAllDay)
-                ListTile(
-                  title: const Text('終了日時'),
-                  subtitle: Text(
-                    '${_endTime.year}/${_endTime.month}/${_endTime.day} '
-                    '${_isAllDay ? "" : ' ${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}'}',
-                  ),
-                  trailing: const Icon(Icons.edit_calendar),
-                  onTap: () async {
-                    final result = await _pickDateTime(_endTime);
-
-                    if (result != null && mounted) {
-                      setState(() {
-                        _endTime = result;
-                      });
-                    }
-                  },
+              ListTile(
+                title: const Text('終了日時'),
+                subtitle: Text(
+                  '${_endTime.year}/${_endTime.month}/${_endTime.day} '
+                  '${_isAllDay ? "" : ' ${_endTime.hour.toString().padLeft(2, '0')}:${_endTime.minute.toString().padLeft(2, '0')}'}',
                 ),
+                trailing: const Icon(Icons.edit_calendar),
+                onTap: () async {
+                  final result = await _pickDateTime(_endTime);
+
+                  if (result != null && mounted) {
+                    setState(() {
+                      _endTime = result;
+                    });
+                  }
+                },
+              ),
               // ],
 
               Text("タグ一覧"),
