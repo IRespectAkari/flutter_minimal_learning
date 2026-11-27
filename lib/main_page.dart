@@ -39,6 +39,7 @@ class _MainPageState extends State<MainPage> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
   bool _isAnimatingByTap = false;
+  AppPage _selectedPage = AppPage.calendar;
 
   @override
   void dispose() {
@@ -51,6 +52,7 @@ class _MainPageState extends State<MainPage> {
     setState(() {
       _currentIndex = index;
       _isAnimatingByTap = true;
+      _selectedPage = AppPage.values[index];
     });
 
     await _pageController.animateToPage(
@@ -62,7 +64,6 @@ class _MainPageState extends State<MainPage> {
     _isAnimatingByTap = false;
   }
 
-  AppPage _selectedPage = AppPage.calendar;
 
   final Set<String> _defaultTags = const {
     'event',
@@ -346,6 +347,8 @@ class _MainPageState extends State<MainPage> {
           if (!_isAnimatingByTap) {
             setState(() {
               _currentIndex = index;
+              _selectedPage = AppPage.values[index];
+
             });
           }
         },
