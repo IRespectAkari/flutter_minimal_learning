@@ -70,7 +70,8 @@ class _MainPageState extends State<MainPage> {
     'study',
     'part-time',
     'work',
-    'club'
+    'club',
+    'memo',
   };
   final List<String> _defaultDropdownlist = const ["1年後期", "2年前期", "2年後期"];
 
@@ -142,6 +143,18 @@ class _MainPageState extends State<MainPage> {
             offset: const Offset(0, -146),
             onSelected: _createAddTaskHandler(
               draftTask: Task.draft(tags: {'work'}),
+            ),
+          ),
+
+          // 上の左上：メモ
+          RadialAction(
+            label: 'メモ',
+            // icon: Icons.priority_high,
+            icon: Icons.post_add,
+            // offset: const Offset(0, -96),
+            offset: const Offset(-76, -211),
+            onSelected: _createAddTaskHandler(
+              draftTask: Task.draft(tags: {'memo'}),
             ),
           ),
         ];
