@@ -286,7 +286,6 @@ class _MainPageState extends State<MainPage> {
 
       AppPage.calendar => Text('${_displayedMonth.year}年${_displayedMonth.month}月',),
 
-      _ => Text(selectedPage.title)
     };
   }
 

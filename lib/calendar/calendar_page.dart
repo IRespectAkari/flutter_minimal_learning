@@ -25,7 +25,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
   late final DateTime _baseSunday;
   late final ScrollController _scrollController;
-  late DateTime _displayedMonth;// 表示中の年月を保持する変数
 
   // Stateに最後に通知した年月を保持
   DateTime? _lastReportedMonth;
@@ -37,9 +36,6 @@ class _CalendarPageState extends State<CalendarPage> {
     super.initState();
 
     _baseSunday = CalendarMonthData.sundayOf(DateTime.now());
-
-    final now = DateTime.now();
-    _displayedMonth = DateTime(now.year, now.month);
 
     _scrollController = ScrollController(
       initialScrollOffset: (_baseIndex - 4) * _cellHeight,
@@ -215,18 +211,6 @@ class _CalendarPageState extends State<CalendarPage> {
     widget.onDisplayedMonthChanged?.call(newMonth);
   }
 
-  Widget _buildMonthHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Text(
-        '${_displayedMonth.year}年${_displayedMonth.month}月',
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
