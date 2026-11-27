@@ -23,6 +23,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   late final DateTime _baseSunday;
   late final ScrollController _scrollController;
+  late DateTime _displayedMonth;
 
   static const _weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
@@ -32,10 +33,22 @@ class _CalendarPageState extends State<CalendarPage> {
 
     _baseSunday = CalendarMonthData.sundayOf(DateTime.now());
 
+    final now = DateTime.now();
+    _displayedMonth = DateTime(now.year, now.month);
+
     _scrollController = ScrollController(
       initialScrollOffset: (_baseIndex - 4) * _cellHeight,
       // 今日が画面の中央に来るために、今日の上に「4」週分表示する
     );
+
+    _scrollController.addListener(_updateDisplayedMonth);
+
+    // 初回レイアウト完了後にも表示年月を更新する
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _updateDisplayedMonth();
+      }
+    });
   }
 
   @override
@@ -154,6 +167,52 @@ class _CalendarPageState extends State<CalendarPage> {
     ..sort((a, b) => a.startTime.compareTo(b.startTime));
   }
 
+  void _updateDisplayedMonth() {
+    if (!_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+
+    // ビューポートの中央に位置するスクロール座標
+    final centerOffset =
+        position.pixels + position.viewportDimension / 2;
+
+    // 画面中央に表示されている週のインデックス
+    final weekIndex = (centerOffset / _cellHeight).floor();
+
+    // ListViewのインデックスから週の開始日を取得
+    final weekOffset = weekIndex - _baseIndex;
+
+    final weekStart = CalendarMonthData.weekStartAt(
+      _baseSunday,
+      weekOffset,
+    );
+
+    // 日曜始まりの週の中央（水曜日）を基準にする
+    final centerDate = weekStart.add(const Duration(days: 3));
+
+    final newMonth = DateTime(centerDate.year, centerDate.month);
+
+    // 年月が変わった場合だけ再描画する
+    if (_displayedMonth.year != newMonth.year ||
+        _displayedMonth.month != newMonth.month) {
+      setState(() {
+        _displayedMonth = newMonth;
+      });
+    }
+  }
+
+  Widget _buildMonthHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Text(
+        '${_displayedMonth.year}年${_displayedMonth.month}月',
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +222,7 @@ class _CalendarPageState extends State<CalendarPage> {
         right: false,
         child: Column(
           children: [
+            _buildMonthHeader(),
             _buildWeekdayHeader(),
             Expanded(
               child: ListView.builder(
