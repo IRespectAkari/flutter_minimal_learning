@@ -24,10 +24,11 @@ jobs:
           cache: true
 
       # Xcode 26.3を使用
-      - name: Select Xcode
+      - name: Select Xcode and Check version of Flutter and Xcode
         run: |
           sudo xcode-select --switch /Applications/Xcode_26.3.app/Contents/Developer
           xcodebuild -version
+          flutter --version
 
       # Flutterの依存パッケージを取得
       - name: Install dependencies
@@ -38,7 +39,7 @@ jobs:
         run: flutter analyze
 
       # iOSアプリを署名なしでビルド
-      - name: Build iOS
+      - name: Build iOS (no codesign)
         run: flutter build ios --release --no-codesign
 
       # Runner.appをIPA形式にパッケージング
@@ -51,6 +52,7 @@ jobs:
 
           test -d "$APP_PATH"
 
+          rm -rf Payload app-unsigned.ipa
           mkdir -p Payload
           ditto "$APP_PATH" "Payload/Runner.app"
           ditto -c -k --sequesterRsrc --keepParent Payload app-unsigned.ipa
@@ -61,7 +63,7 @@ jobs:
       - name: Upload IPA
         uses: actions/upload-artifact@v7
         with:
-          name: ios-unsigned-ipa
+          name: ios-unsigned-ipa-${{ github.run_number }}
           path: app-unsigned.ipa
           if-no-files-found: error
           retention-days: 14
