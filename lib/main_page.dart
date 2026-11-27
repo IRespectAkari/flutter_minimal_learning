@@ -154,7 +154,12 @@ class _MainPageState extends State<MainPage> {
             // offset: const Offset(0, -96),
             offset: const Offset(-76, -211),
             onSelected: _createAddTaskHandler(
-              draftTask: Task.draft(tags: {'memo'}),
+              draftTask: Task.draft(
+                tags: {'memo'},
+                status: TaskStatus.completed,
+                startTime: DateTime.now(),
+                endTime: DateTime.now(),
+              ),
             ),
           ),
         ];
