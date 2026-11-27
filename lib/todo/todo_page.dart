@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_minimal_learning/task/seed_test_tasks.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
 import 'package:flutter_minimal_learning/todo/tag_search_header.dart';
 import 'package:flutter_minimal_learning/todo/todo_list.dart';
@@ -53,8 +52,6 @@ class _TodoPageState extends State<TodoPage> {
     };
 
 
-    Expanded wrapEx(child) => Expanded(child: child);
-
 
     return Scaffold(
 
@@ -101,24 +98,6 @@ class _TodoPageState extends State<TodoPage> {
         );
   }
 
-  Padding _searchBar() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(child: TextField(
-            decoration: const InputDecoration(
-              labelText: 'タスクを検索',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
-            ),
-            onChanged: (value) => setState(() {searchQuery = value;}),
-          )),
-          Icon(Icons.filter_alt),
-        ],
-      ),
-    );
-  }
 
   Widget _searchHeader(Set<String> tags, Map<TaskStatusFilter, int> statusCounts) {
     return TagSearchHeader(

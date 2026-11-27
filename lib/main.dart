@@ -30,7 +30,7 @@ Future<void> testDatabase() async {
   //   endTime: DateTime(2026, 10, 20, 10, 0),
   // );
 
-  print("-------------------");
+  // print("-------------------");
 // 保存
 //   await database.insertTask(task);
 
@@ -46,12 +46,12 @@ Future<void> testDatabase() async {
   await database.deleteTask("sqlite_test_001");
 
 // 読み込み
-  final tasks = await database.getTasks();
+//   final tasks = await database.getTasks();
 
-  if(tasks.isEmpty) print("empty!");
-  for (final task in tasks) {
-    print('${task.id}: ${task.title}');
-  }
+  // if(tasks.isEmpty) print("empty!");
+  // for (final task in tasks) {
+  //   print('${task.id}: ${task.title}');
+  // }
 }
 
 class MyApp extends StatelessWidget {

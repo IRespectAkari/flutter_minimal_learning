@@ -26,7 +26,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
   late bool _isAllDay;
   late Set<String> _selectedTags;
   late Task _draftTask;
-  late Set<String> _allTags;
+  // late Set<String> _allTags;
 
   @override
   void initState() {
@@ -47,7 +47,7 @@ class _AddTaskPageState extends State<AddTaskPage> {
     } else {
       _selectedTags = <String>{};
     }
-    _allTags = widget.allTags;
+    // _allTags = widget.allTags;
 
     // final now = DateTime.now();
     // _startTime = DateTime(

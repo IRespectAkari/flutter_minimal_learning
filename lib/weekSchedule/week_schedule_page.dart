@@ -241,7 +241,7 @@ class _DayColumn extends StatelessWidget {
     required this.pixelsPerMinute,
   });
 
-  final List<_ScheduleEvent> events;
+  final List<ScheduleEvent> events;
   final double hourHeight;
   final double scheduleHeight;
   final double pixelsPerMinute;
@@ -334,7 +334,7 @@ class _GridPainter extends CustomPainter {
 class _EventCard extends StatelessWidget {
   const _EventCard({required this.event});
 
-  final _ScheduleEvent event;
+  final ScheduleEvent event;
 
   @override
   Widget build(BuildContext context) {
@@ -399,8 +399,8 @@ class _EventCard extends StatelessWidget {
 }
 
 /// 予定データ
-class _ScheduleEvent {
-  const _ScheduleEvent({
+class ScheduleEvent {
+  const ScheduleEvent({
     required this.dayIndex,
     required this.title,
     required this.startMinutes,
@@ -434,10 +434,10 @@ const _eventColors = <Color>[
   Color(0xFFB2DFDB),
 ];
 
-List<_ScheduleEvent> convertTasks(List<Task> tasks) {
+List<ScheduleEvent> convertTasks(List<Task> tasks) {
   return [
     for (var i = 0; i < tasks.length; i++)
-      _ScheduleEvent(
+      ScheduleEvent(
         dayIndex: tasks[i].startTime.weekday - 1,
         title: tasks[i].title,
         startMinutes:

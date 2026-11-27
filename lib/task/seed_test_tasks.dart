@@ -6,7 +6,7 @@ import 'package:flutter_minimal_learning/task/task_database.dart';
 Future<void> seedTestTasks() async {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
-  var idCounter = 0;
+  // var idCounter = 0;
 
   Future<void> add({
     required String title,
@@ -363,5 +363,5 @@ Future<void> seedTestTasks() async {
     tags: {'personal'},
   );
 
-  print('テストタスクの登録完了');
+  // print('テストタスクの登録完了');
 }

@@ -11,7 +11,6 @@ import 'package:flutter_minimal_learning/todo/todo_page.dart';
 
 import 'package:flutter_minimal_learning/weekSchedule/week_schedule_page.dart';
 import 'package:flutter_minimal_learning/timetable/timetable_page.dart';
-import 'package:flutter_minimal_learning/timetable/timetable2_page.dart';
 import 'package:flutter_minimal_learning/calendar/calendar_page.dart';
 import 'package:flutter_minimal_learning/option/option_page.dart';
 

@@ -162,7 +162,7 @@ class _RadialActionButtonState extends State<RadialActionButton> {
     // Overlay内のローカル座標へ変換
     final anchor = overlayBox.globalToLocal(fabCenterGlobal);
 
-    this._overlayBox = overlayBox;
+    _overlayBox = overlayBox;
 
     final halfSize = widget.actionButtonSize / 2;
     const edgePadding = 8.0;
