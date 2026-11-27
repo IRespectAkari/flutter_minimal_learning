@@ -4,6 +4,9 @@ import 'package:sqflite/sqflite.dart';
 import 'package:flutter_minimal_learning/task/task.dart';
 
 class TaskDatabase {
+  static const String _initialTasksSeededKey = 'initial_tasks_seeded';
+  static const String _databaseResetKey = 'database_reset';
+
   // データベースを管理するインスタンス
   static final TaskDatabase instance = TaskDatabase._();
 
@@ -68,32 +71,34 @@ class TaskDatabase {
     ''');
   }
 
-  // 初期データを一度だけ登録する
+  // 初回起動時のみ初期データを登録する
   Future<void> initializeWithInitialTasks(
       List<Task> initialTasks,
       ) async {
     final db = await database;
 
     await db.transaction((txn) async {
-      final result = await txn.query(
+      final seeded = await txn.query(
         'app_meta',
-        columns: ['value'],
         where: 'key = ?',
-        whereArgs: ['initial_tasks_seeded'],
-        limit: 1,
+        whereArgs: [_initialTasksSeededKey],
       );
 
-      // 登録済みなら何もしない
-      if (result.isNotEmpty) return;
+      final reset = await txn.query(
+        'app_meta',
+        where: 'key = ?',
+        whereArgs: [_databaseResetKey],
+      );
 
-      // 初期データをまとめて登録
+      // 登録済み、またはDBリセット後なら自動登録しない
+      if (seeded.isNotEmpty || reset.isNotEmpty) return;
+
       for (final task in initialTasks) {
         await txn.insert('tasks', task.toMap());
       }
 
-      // 登録済みの印を付ける
       await txn.insert('app_meta', {
-        'key': 'initial_tasks_seeded',
+        'key': _initialTasksSeededKey,
         'value': 'true',
       });
     });
@@ -136,5 +141,58 @@ class TaskDatabase {
       where: 'id = ?',
       whereArgs: [id],
     );
+  }
+
+  // 手動で初期データを読み込む
+  // 読み込み済みなら false、読み込んだら true
+  Future<bool> loadInitialTasks(List<Task> initialTasks) async {
+    final db = await database;
+
+    return db.transaction((txn) async {
+      final seeded = await txn.query(
+        'app_meta',
+        where: 'key = ?',
+        whereArgs: [_initialTasksSeededKey],
+      );
+
+      if (seeded.isNotEmpty) return false;
+
+      for (final task in initialTasks) {
+        await txn.insert('tasks', task.toMap());
+      }
+
+      await txn.insert('app_meta', {
+        'key': _initialTasksSeededKey,
+        'value': 'true',
+      });
+
+      // リセット状態を解除
+      await txn.delete(
+        'app_meta',
+        where: 'key = ?',
+        whereArgs: [_databaseResetKey],
+      );
+
+      return true;
+    });
+  }
+
+  // データベースのデータをリセットする
+  Future<void> resetDatabase() async {
+    final db = await database;
+
+    await db.transaction((txn) async {
+      // 現在存在するタスクを全削除
+      await txn.delete('tasks');
+
+      // メタ情報を初期化
+      await txn.delete('app_meta');
+
+      // 起動時の自動初期データ登録を抑制する
+      await txn.insert('app_meta', {
+        'key': _databaseResetKey,
+        'value': 'true',
+      });
+    });
   }
 }

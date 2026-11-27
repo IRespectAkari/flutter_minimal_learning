@@ -65,12 +65,12 @@ class _MainPageState extends State<MainPage> {
 
 
   final Set<String> _defaultTags = const {
-    'event',
     'private',
     'shopping',
     'study',
     'part-time',
     'work',
+    'club'
   };
   final List<String> _defaultDropdownlist = const ["1年後期", "2年前期", "2年後期"];
 
@@ -193,6 +193,37 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  // DBリセット
+  Future<void> _resetDatabase() async {
+    await TaskDatabase.instance.resetDatabase();
+
+    final loadedTasks = await TaskDatabase.instance.getTasks();
+
+    if (!mounted) return;
+
+    setState(() {
+      _tasks = loadedTasks;
+    });
+  }
+
+
+  // 初期データ読み込み
+  Future<bool> _loadInitialData() async {
+    final inserted = await TaskDatabase.instance.loadInitialTasks(
+      initialTasks,
+    );
+
+    final loadedTasks = await TaskDatabase.instance.getTasks();
+
+    if (!mounted) return inserted;
+
+    setState(() {
+      _tasks = loadedTasks;
+    });
+
+    return inserted;
+  }
+
   // 時間割の上部ドロップダウンメニューの自動生成関数
   List<DropdownMenuItem<String>> createDropdownItems(List<String> values) {
     return values.map((value) => DropdownMenuItem<String>(
@@ -297,7 +328,13 @@ class _MainPageState extends State<MainPage> {
             onPressed: () async {
               await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => OptionPage())
+                // MaterialPageRoute(builder: (context) => OptionPage())
+                MaterialPageRoute(
+                  builder: (context) => OptionPage(
+                    onResetDatabase: _resetDatabase,
+                    onLoadInitialData: _loadInitialData,
+                  ),
+                )
               );
             }
           )

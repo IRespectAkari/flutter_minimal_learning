@@ -169,7 +169,7 @@ final List<Task> initialTasks = [
     description: '学食で友人と昼食をとる',
     startTime: DateTime(2026, 10, 12, 12, 0),
     endTime: DateTime(2026, 10, 12, 12, 40),
-    tags: {'event', 'private'},
+    tags: {'private'},
     recurrence: 'weekly',
   ),
   Task.draft(
@@ -178,7 +178,7 @@ final List<Task> initialTasks = [
     description: 'プログラミングの課題を進める',
     startTime: DateTime(2026, 10, 12, 10, 30),
     endTime: DateTime(2026, 10, 12, 12, 0),
-    tags: {'event', 'study'},
+    tags: {'study'},
     recurrence: 'weekly',
   ),
 
@@ -189,7 +189,7 @@ final List<Task> initialTasks = [
     description: '次回の講義の予習と資料の整理',
     startTime: DateTime(2026, 10, 13, 14, 20),
     endTime: DateTime(2026, 10, 13, 15, 20),
-    tags: {'event', 'study'},
+    tags: {'study'},
     recurrence: 'weekly',
   ),
   Task.draft(
@@ -198,7 +198,7 @@ final List<Task> initialTasks = [
     description: '帰宅前に必要な日用品を購入する',
     startTime: DateTime(2026, 10, 13, 16, 0),
     endTime: DateTime(2026, 10, 13, 17, 0),
-    tags: {'event', 'shopping'},
+    tags: {'shopping'},
     recurrence: 'weekly',
   ),
 
@@ -209,7 +209,7 @@ final List<Task> initialTasks = [
     description: '講義の合間に飲み物を買って休憩する',
     startTime: DateTime(2026, 10, 14, 12, 0),
     endTime: DateTime(2026, 10, 14, 12, 40),
-    tags: {'event', 'private'},
+    tags: {'private'},
     recurrence: 'weekly',
   ),
   Task.draft(
@@ -218,7 +218,7 @@ final List<Task> initialTasks = [
     description: '講義で分からなかった内容を確認する',
     startTime: DateTime(2026, 10, 14, 13, 50),
     endTime: DateTime(2026, 10, 14, 14, 30),
-    tags: {'event', 'study'},
+    tags: {'study'},
     recurrence: 'weekly',
   ),
 
@@ -229,7 +229,7 @@ final List<Task> initialTasks = [
     description: '空き時間に昼食をとる',
     startTime: DateTime(2026, 10, 15, 12, 0),
     endTime: DateTime(2026, 10, 15, 12, 40),
-    tags: {'event', 'private'},
+    tags: {'private'},
     recurrence: 'weekly',
   ),
   Task.draft(
@@ -238,7 +238,7 @@ final List<Task> initialTasks = [
     description: 'メンバーと競技プログラミングの問題を解く',
     startTime: DateTime(2026, 10, 15, 14, 0),
     endTime: DateTime(2026, 10, 15, 16, 10),
-    tags: {'event', 'club'},
+    tags: {'club'},
     recurrence: 'weekly',
   ),
 
@@ -249,7 +249,7 @@ final List<Task> initialTasks = [
     description: '課題の残りと来週の予定を整理する',
     startTime: DateTime(2026, 10, 16, 14, 40),
     endTime: DateTime(2026, 10, 16, 16, 0),
-    tags: {'event', 'study'},
+    tags: {'study'},
     recurrence: 'weekly',
   ),
   Task.draft(
@@ -258,7 +258,7 @@ final List<Task> initialTasks = [
     description: '飲食店でのアルバイト',
     startTime: DateTime(2026, 10, 16, 16, 30),
     endTime: DateTime(2026, 10, 16, 18, 0),
-    tags: {'event', 'part-time'},
+    tags: {'part-time'},
     recurrence: 'weekly',
   ),
 
