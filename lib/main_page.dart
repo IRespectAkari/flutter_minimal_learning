@@ -358,6 +358,8 @@ class _MainPageState extends State<MainPage> {
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onBottomNavTapped,
+        unselectedItemColor: Colors.black54,
+        selectedItemColor: Colors.lightBlue,
         items: AppPage.values.map((page) =>
           BottomNavigationBarItem(icon: Icon(page.icon), label: page.title)
         ).toList(),
